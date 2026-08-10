@@ -1,0 +1,22 @@
+[
+  {
+    "case_id": "inferred-open",
+    "classification": "fixture defect",
+    "evidence": "The actual record differed only by a Japanese full stop appended to the unquoted conclusion value."
+  },
+  {
+    "case_id": "synthetic-refuted",
+    "classification": "fixture defect",
+    "evidence": "The actual record differed only by a Japanese full stop appended to the unquoted conclusion value."
+  },
+  {
+    "case_id": "human-credential",
+    "classification": "fixture defect",
+    "evidence": "The actual record differed only by a Japanese full stop appended to the unquoted bounds value."
+  },
+  {
+    "case_id": "human-irreversible",
+    "classification": "fixture defect",
+    "evidence": "The actual record differed only by a Japanese full stop appended to the unquoted bounds value."
+  }
+]

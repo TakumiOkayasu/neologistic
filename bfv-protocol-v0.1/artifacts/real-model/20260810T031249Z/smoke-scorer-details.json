@@ -1,0 +1,20 @@
+[
+  {
+    "case_id": "observed-verified",
+    "candidate": "pipe-v1",
+    "trial": 0,
+    "parse_ok": true,
+    "canonical_exact": false,
+    "semantic_exact": false,
+    "routing_ok": true,
+    "epistemic_ok": true,
+    "evidence_ok": true,
+    "hard_failure": true,
+    "usage": {
+      "input_tokens": 47010,
+      "cached_tokens": 37120,
+      "output_tokens": 649,
+      "reasoning_tokens": 392
+    }
+  }
+]

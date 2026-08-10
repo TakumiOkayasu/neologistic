@@ -1,0 +1,42 @@
+[
+  {
+    "case_id": "observed-verified",
+    "classification": "fixture defect",
+    "evidence": "The input omitted the expected conclusion and bounds and described two observations, so the model emitted two records instead of the scorer's one exact record."
+  },
+  {
+    "case_id": "inferred-open",
+    "classification": "fixture defect",
+    "evidence": "The input omitted the expected target, exact evidence spelling, and exact bounds while the scorer required equality for all fields."
+  },
+  {
+    "case_id": "synthetic-open",
+    "classification": "fixture defect",
+    "evidence": "The input omitted the expected target and exact English bounds while the scorer required exact record equality."
+  },
+  {
+    "case_id": "synthetic-refuted",
+    "classification": "fixture defect",
+    "evidence": "The input omitted the expected target, exact conclusion, evidence identifier, and exact bounds."
+  },
+  {
+    "case_id": "human-credential",
+    "classification": "fixture defect",
+    "evidence": "The model selected Q1, but the input omitted the expected target, exact request, evidence identifier, and exact bounds; target-sensitive routing therefore failed."
+  },
+  {
+    "case_id": "human-irreversible",
+    "classification": "fixture defect",
+    "evidence": "The model selected Q1, but the input omitted the expected target, exact request, and exact bounds; target-sensitive routing therefore failed."
+  },
+  {
+    "case_id": "escaped-content",
+    "classification": "fixture defect",
+    "evidence": "The expected English two-line conclusion was absent from the Japanese input, which only described its character classes."
+  },
+  {
+    "case_id": "multi-record",
+    "classification": "fixture defect",
+    "evidence": "The input omitted both exact English conclusions, evidence identifiers, and bounds while the scorer required exact record equality."
+  }
+]

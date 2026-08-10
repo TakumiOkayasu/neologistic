@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019fe9ac-4891-7cb1-a0ed-98158027b597"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"R1|TTL=0の反例候補|SR|反例は反駁された|fixture synthetic-refutedで既存実装と変更後実装の観測結果が一致した|fixture synthetic-refutedの実行範囲内"}}
+{"type":"turn.completed","usage":{"input_tokens":15420,"cached_input_tokens":6912,"cache_write_input_tokens":0,"output_tokens":134,"reasoning_output_tokens":73}}

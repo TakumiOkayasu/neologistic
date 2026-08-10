@@ -1,0 +1,146 @@
+[
+  {
+    "case_id": "observed-verified",
+    "candidate": "pipe-v1",
+    "trial": 1,
+    "parse_ok": true,
+    "canonical_exact": false,
+    "semantic_exact": false,
+    "routing_ok": true,
+    "epistemic_ok": true,
+    "evidence_ok": true,
+    "hard_failure": true,
+    "usage": {
+      "input_tokens": 15431,
+      "cached_tokens": 6912,
+      "output_tokens": 201,
+      "reasoning_tokens": 118
+    }
+  },
+  {
+    "case_id": "inferred-open",
+    "candidate": "pipe-v1",
+    "trial": 1,
+    "parse_ok": true,
+    "canonical_exact": false,
+    "semantic_exact": false,
+    "routing_ok": true,
+    "epistemic_ok": true,
+    "evidence_ok": true,
+    "hard_failure": true,
+    "usage": {
+      "input_tokens": 15413,
+      "cached_tokens": 6912,
+      "output_tokens": 150,
+      "reasoning_tokens": 102
+    }
+  },
+  {
+    "case_id": "synthetic-open",
+    "candidate": "pipe-v1",
+    "trial": 1,
+    "parse_ok": true,
+    "canonical_exact": false,
+    "semantic_exact": false,
+    "routing_ok": true,
+    "epistemic_ok": true,
+    "evidence_ok": true,
+    "hard_failure": true,
+    "usage": {
+      "input_tokens": 15418,
+      "cached_tokens": 6912,
+      "output_tokens": 113,
+      "reasoning_tokens": 65
+    }
+  },
+  {
+    "case_id": "synthetic-refuted",
+    "candidate": "pipe-v1",
+    "trial": 1,
+    "parse_ok": true,
+    "canonical_exact": false,
+    "semantic_exact": false,
+    "routing_ok": true,
+    "epistemic_ok": true,
+    "evidence_ok": true,
+    "hard_failure": true,
+    "usage": {
+      "input_tokens": 15420,
+      "cached_tokens": 6912,
+      "output_tokens": 134,
+      "reasoning_tokens": 73
+    }
+  },
+  {
+    "case_id": "human-credential",
+    "candidate": "pipe-v1",
+    "trial": 1,
+    "parse_ok": true,
+    "canonical_exact": false,
+    "semantic_exact": false,
+    "routing_ok": false,
+    "epistemic_ok": true,
+    "evidence_ok": true,
+    "hard_failure": true,
+    "usage": {
+      "input_tokens": 15239,
+      "cached_tokens": 11008,
+      "output_tokens": 170,
+      "reasoning_tokens": 82
+    }
+  },
+  {
+    "case_id": "human-irreversible",
+    "candidate": "pipe-v1",
+    "trial": 1,
+    "parse_ok": true,
+    "canonical_exact": false,
+    "semantic_exact": false,
+    "routing_ok": false,
+    "epistemic_ok": true,
+    "evidence_ok": true,
+    "hard_failure": true,
+    "usage": {
+      "input_tokens": 15432,
+      "cached_tokens": 6912,
+      "output_tokens": 153,
+      "reasoning_tokens": 47
+    }
+  },
+  {
+    "case_id": "escaped-content",
+    "candidate": "pipe-v1",
+    "trial": 1,
+    "parse_ok": true,
+    "canonical_exact": false,
+    "semantic_exact": false,
+    "routing_ok": true,
+    "epistemic_ok": true,
+    "evidence_ok": true,
+    "hard_failure": true,
+    "usage": {
+      "input_tokens": 15415,
+      "cached_tokens": 6912,
+      "output_tokens": 319,
+      "reasoning_tokens": 281
+    }
+  },
+  {
+    "case_id": "multi-record",
+    "candidate": "pipe-v1",
+    "trial": 1,
+    "parse_ok": true,
+    "canonical_exact": false,
+    "semantic_exact": false,
+    "routing_ok": true,
+    "epistemic_ok": true,
+    "evidence_ok": true,
+    "hard_failure": true,
+    "usage": {
+      "input_tokens": 15414,
+      "cached_tokens": 6912,
+      "output_tokens": 179,
+      "reasoning_tokens": 114
+    }
+  }
+]

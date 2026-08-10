@@ -1,0 +1,72 @@
+[
+  {
+    "case_id": "inferred-open",
+    "candidate": "pipe-v1",
+    "trial": 2,
+    "parse_ok": true,
+    "canonical_exact": true,
+    "semantic_exact": true,
+    "routing_ok": true,
+    "epistemic_ok": true,
+    "evidence_ok": true,
+    "hard_failure": false,
+    "usage": {
+      "input_tokens": 15460,
+      "cached_tokens": 6912,
+      "output_tokens": 47
+    }
+  },
+  {
+    "case_id": "synthetic-refuted",
+    "candidate": "pipe-v1",
+    "trial": 2,
+    "parse_ok": true,
+    "canonical_exact": true,
+    "semantic_exact": true,
+    "routing_ok": true,
+    "epistemic_ok": true,
+    "evidence_ok": true,
+    "hard_failure": false,
+    "usage": {
+      "input_tokens": 15469,
+      "cached_tokens": 6912,
+      "output_tokens": 66,
+      "reasoning_tokens": 16
+    }
+  },
+  {
+    "case_id": "human-credential",
+    "candidate": "pipe-v1",
+    "trial": 2,
+    "parse_ok": true,
+    "canonical_exact": true,
+    "semantic_exact": true,
+    "routing_ok": true,
+    "epistemic_ok": true,
+    "evidence_ok": true,
+    "hard_failure": false,
+    "usage": {
+      "input_tokens": 15462,
+      "cached_tokens": 6912,
+      "output_tokens": 50
+    }
+  },
+  {
+    "case_id": "human-irreversible",
+    "candidate": "pipe-v1",
+    "trial": 2,
+    "parse_ok": true,
+    "canonical_exact": true,
+    "semantic_exact": true,
+    "routing_ok": true,
+    "epistemic_ok": true,
+    "evidence_ok": true,
+    "hard_failure": false,
+    "usage": {
+      "input_tokens": 15465,
+      "cached_tokens": 15104,
+      "output_tokens": 68,
+      "reasoning_tokens": 20
+    }
+  }
+]

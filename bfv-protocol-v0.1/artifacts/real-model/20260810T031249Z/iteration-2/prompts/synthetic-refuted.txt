@@ -1,0 +1,29 @@
+# BFV wire output v0.1
+
+Emit only canonical BFV records. Do not add Markdown, prose, headings, or code fences.
+Use one LF-delimited record per atomic proposition.
+
+```text
+R1|target|epistemic|conclusion|evidence|bounds
+Q1|target|request|recommendation|evidence|bounds
+D1|target|decision|authority-reference|bounds
+```
+
+`R1` epistemic value is two characters:
+
+- Origin: `O` observed, `I` inferred, `S` synthetic counterexample or hypothesis.
+- State: `U` unverified, `V` verified, `R` refuted.
+
+Rules:
+
+- `V` and `R` require traceable evidence.
+- `Q1` is allowed only when human-only authority, unavailable access, or an irreducible subjective choice blocks autonomous continuation.
+- Every `Q1` must include the best-supported recommendation and the exact blocking boundary.
+- `D1` may only transmit a human or pre-authorized policy decision; an agent must not invent it.
+- Use `-` for a null field.
+- Escape `\\`, `|`, LF, CR, TAB, and a literal single `-` as `\\`, `\|`, `\n`, `\r`, `\t`, and `\-`.
+- Do not emit completion status. Completion is decided outside this protocol.
+
+Fixture id: synthetic-refuted
+
+次のfixtureで反駁された反例候補を、指定したfield値を変更せず1 recordで出力する。target: COUNTER:ttl-zero。状態: SR。conclusion: TTL=0で挙動が変わるという反例候補は成立しない。evidence: test:ttl-zero#run-7。bounds: fixture environment only。

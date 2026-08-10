@@ -1,0 +1,1 @@
+{"case_id":"observed-verified","candidate":"pipe-v1","trial":0,"raw":"R1|AC:2|OV|TTLは秒として定義されている|config.ts:22|config.ts:22の実ファイル確認範囲\nR1|AC:2|OV|TTL値はDate.now()へ直接加算されている|cache.ts:81|cache.ts:81の実ファイル確認範囲","usage":{"input_tokens":47010,"cached_tokens":37120,"output_tokens":649,"reasoning_tokens":392}}
