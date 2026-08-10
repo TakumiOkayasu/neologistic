@@ -1,0 +1,17 @@
+[
+  {
+    "candidate": "pipe-v1",
+    "trials": 8,
+    "parse_failures": 0,
+    "canonical_exact": 4,
+    "semantic_exact": 4,
+    "routing_failures": 0,
+    "epistemic_failures": 0,
+    "evidence_failures": 0,
+    "hard_failures": 4,
+    "input_tokens": 123703,
+    "cached_tokens": 88064,
+    "output_tokens": 553,
+    "reasoning_tokens": 184
+  }
+]

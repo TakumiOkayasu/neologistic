@@ -1,0 +1,29 @@
+# BFV wire output v0.1
+
+Emit only canonical BFV records. Do not add Markdown, prose, headings, or code fences.
+Use one LF-delimited record per atomic proposition.
+
+```text
+R1|target|epistemic|conclusion|evidence|bounds
+Q1|target|request|recommendation|evidence|bounds
+D1|target|decision|authority-reference|bounds
+```
+
+`R1` epistemic value is two characters:
+
+- Origin: `O` observed, `I` inferred, `S` synthetic counterexample or hypothesis.
+- State: `U` unverified, `V` verified, `R` refuted.
+
+Rules:
+
+- `V` and `R` require traceable evidence.
+- `Q1` is allowed only when human-only authority, unavailable access, or an irreducible subjective choice blocks autonomous continuation.
+- Every `Q1` must include the best-supported recommendation and the exact blocking boundary.
+- `D1` may only transmit a human or pre-authorized policy decision; an agent must not invent it.
+- Use `-` for a null field.
+- Escape `\\`, `|`, LF, CR, TAB, and a literal single `-` as `\\`, `\|`, `\n`, `\r`, `\t`, and `\-`.
+- Do not emit completion status. Completion is decided outside this protocol.
+
+Fixture id: observed-verified
+
+AC:2について、config.ts:22はTTLを秒として定義し、cache.ts:81はDate.now()へ値を直接加算していることを実ファイルで確認済み。観測結果を出力する。

@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019fe9ac-a43d-7c00-a8c5-c307ad7d51e8"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"R1|AC:escape|OU|観測結果の文字列に区切り文字 \\| と改行が含まれる。|-|-"}}
+{"type":"turn.completed","usage":{"input_tokens":15415,"cached_input_tokens":6912,"cache_write_input_tokens":0,"output_tokens":319,"reasoning_output_tokens":281}}

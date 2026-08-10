@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019fe9ae-fc5c-73d2-b419-234a9d4eecab"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"R1|COUNTER:ttl-zero|SR|TTL=0で挙動が変わるという反例候補は成立しない。|test:ttl-zero#run-7|fixture environment only"}}
+{"type":"turn.completed","usage":{"input_tokens":15462,"cached_input_tokens":6912,"cache_write_input_tokens":0,"output_tokens":82,"reasoning_output_tokens":31}}

@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019fe9af-515b-7270-98a8-88b77c840647"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"R1|AC:escape|OU|value contains \\| and line\\nbreak|-|-"}}
+{"type":"turn.completed","usage":{"input_tokens":15455,"cached_input_tokens":15104,"cache_write_input_tokens":0,"output_tokens":88,"reasoning_output_tokens":63}}

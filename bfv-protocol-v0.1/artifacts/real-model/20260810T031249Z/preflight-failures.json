@@ -1,0 +1,14 @@
+[
+  {
+    "stage": "smoke invocation attempt 1",
+    "classification": "runtime extraction error",
+    "exit_status": 2,
+    "evidence": "Codex CLI 0.147.0 rejected --ask-for-approval after the exec subcommand; no model call occurred. The installed help showed that exec accepts config overrides, so approval_policy=never was used instead."
+  },
+  {
+    "stage": "smoke invocation attempt 2",
+    "classification": "runtime extraction error",
+    "exit_status": 1,
+    "evidence": "The managed filesystem denied Codex writes to ~/.codex/state_5.sqlite, so the in-process app-server client did not initialize and no model call occurred. The same command was rerun with approved host access."
+  }
+]

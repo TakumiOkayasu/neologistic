@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019fe9b0-b7d6-7a32-bb19-144eb70de66a"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"R1|ASSERT:ttl-cause|IU|TTL単位不一致が早期失効の原因である|file:config.ts:22,file:cache.ts:81|runtime behavior not reproduced"}}
+{"type":"turn.completed","usage":{"input_tokens":15460,"cached_input_tokens":6912,"cache_write_input_tokens":0,"output_tokens":47,"reasoning_output_tokens":0}}

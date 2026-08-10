@@ -1,0 +1,5 @@
+{
+  "case_id": "observed-verified",
+  "classification": "fixture defect",
+  "evidence": "The smoke input described two observed facts but omitted the expected composite conclusion and source-revision bound. The model emitted two parseable R1 records, while the scorer expected one different record."
+}

@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019fe9ac-0c1c-71e3-884f-bd75b081cc9a"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"R1|TTL早期失効|IU|TTL単位不一致が早期失効の原因である|TTL単位不一致からの推論|runtime再現未実施"}}
+{"type":"turn.completed","usage":{"input_tokens":15413,"cached_input_tokens":6912,"cache_write_input_tokens":0,"output_tokens":150,"reasoning_output_tokens":102}}

@@ -1,0 +1,42 @@
+[
+  {
+    "case_id": "observed-verified",
+    "trial": 1,
+    "raw_events": "iteration-2/raw-events/observed-verified.jsonl"
+  },
+  {
+    "case_id": "inferred-open",
+    "trial": 2,
+    "raw_events": "iteration-3/raw-events/inferred-open.jsonl"
+  },
+  {
+    "case_id": "synthetic-open",
+    "trial": 1,
+    "raw_events": "iteration-2/raw-events/synthetic-open.jsonl"
+  },
+  {
+    "case_id": "synthetic-refuted",
+    "trial": 2,
+    "raw_events": "iteration-3/raw-events/synthetic-refuted.jsonl"
+  },
+  {
+    "case_id": "human-credential",
+    "trial": 2,
+    "raw_events": "iteration-3/raw-events/human-credential.jsonl"
+  },
+  {
+    "case_id": "human-irreversible",
+    "trial": 2,
+    "raw_events": "iteration-3/raw-events/human-irreversible.jsonl"
+  },
+  {
+    "case_id": "escaped-content",
+    "trial": 1,
+    "raw_events": "iteration-2/raw-events/escaped-content.jsonl"
+  },
+  {
+    "case_id": "multi-record",
+    "trial": 1,
+    "raw_events": "iteration-2/raw-events/multi-record.jsonl"
+  }
+]

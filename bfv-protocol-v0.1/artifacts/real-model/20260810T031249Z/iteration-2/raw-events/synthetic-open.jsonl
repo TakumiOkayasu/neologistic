@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019fe9ae-e94d-7761-8959-fbba4544a9c7"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"R1|COUNTER:ttl-zero|SU|TTL=0で変換後の挙動が既存実装と異なる可能性がある|-|synthetic and not executed"}}
+{"type":"turn.completed","usage":{"input_tokens":15456,"cached_input_tokens":15104,"cache_write_input_tokens":0,"output_tokens":45,"reasoning_output_tokens":0}}
