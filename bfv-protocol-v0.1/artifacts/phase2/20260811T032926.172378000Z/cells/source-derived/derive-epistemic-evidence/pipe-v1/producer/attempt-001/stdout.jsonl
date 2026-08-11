@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019feedf-5cb1-79c1-ae7d-7c7fea2f7637"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"R1|CHECK:cache-regression|OV|fixture cache regression test passes|test:cache#88|fixture execution only\nR1|ASSERT:production-cause|IU|the conversion is the likely production cause|file:cache.go:41|production runtime not observed"}}
+{"type":"turn.completed","usage":{"input_tokens":15737,"cached_input_tokens":6912,"cache_write_input_tokens":0,"output_tokens":61,"reasoning_output_tokens":0}}

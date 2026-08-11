@@ -1,0 +1,7 @@
+{
+  "phase2/fixtures/cases.jsonl": "809266716f5b0ba4be4d2f6340fa88583f245a983b222238d0793fc1f14dd2c6",
+  "internal/phase2/formats.go": "8f4fd2eda837e7ad6dc1b21bd418c86db532b8554507913e7cfdab2654341f4f",
+  "internal/phase2/scorer.go": "9bef136b2febca91c175441621cb89c132b0306806374477d79de714e3a1404b",
+  "internal/phase2/runner.go": "c22c4920708439425725fa730cd12bfc4a1392b293393017f66ce46d7d2a41c4",
+  "cmd/phase2ctl/main.go": "6a3b62caac72b767b9f33ad880fe0467965ad3b8b701dbc0a7d374637e35f578"
+}

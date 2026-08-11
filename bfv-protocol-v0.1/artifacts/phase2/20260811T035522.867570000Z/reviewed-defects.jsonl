@@ -1,0 +1,4 @@
+{"case_id":"derive-authorized-decision","candidate":"direct-v1","stage":"consumer","category":"model","evidence":"CHECK:canary was returned as epistemic verified, losing the observed origin required by OV"}
+{"case_id":"derive-epistemic-evidence","candidate":"direct-v1","stage":"consumer","category":"model","evidence":"CHECK:cache-regression was returned as epistemic verified, losing the observed origin required by OV"}
+{"case_id":"copy-multirecord","candidate":"nl-v1","stage":"consumer","category":"model","evidence":"CHECK:unit was returned as epistemic verified, losing the observed origin transmitted by the producer"}
+{"case_id":"derive-authorized-decision","candidate":"nl-v1","stage":"consumer","category":"model","evidence":"CHECK:canary was returned as epistemic verified, losing the observed origin transmitted by the producer"}

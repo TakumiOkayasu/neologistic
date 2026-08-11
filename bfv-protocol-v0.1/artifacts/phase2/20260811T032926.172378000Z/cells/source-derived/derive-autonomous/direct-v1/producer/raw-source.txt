@@ -1,0 +1,1 @@
+For target `RECOVERY:formatter`, evidence `RUNBOOK:auto#4` supports the exact inferred, unverified assertion `the formatter failure is recoverable autonomously`, bounded to `disposable workspace directory only`. The authorized recovery is reversible, all information is present, and no credential or human-only choice is needed. Determine whether any Q1 is valid.

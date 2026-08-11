@@ -1,0 +1,11 @@
+{"case_id":"copy-multirecord","candidate":"nl-v1","stage":"scoring","category":"unclassified","evidence":"observed hard failure; causal attribution requires separate evidence"}
+{"case_id":"derive-authorized-decision","candidate":"direct-v1","stage":"scoring","category":"unclassified","evidence":"observed hard failure; causal attribution requires separate evidence"}
+{"case_id":"derive-authorized-decision","candidate":"json-v1","stage":"scoring","category":"unclassified","evidence":"observed hard failure; causal attribution requires separate evidence"}
+{"case_id":"derive-authorized-decision","candidate":"nl-v1","stage":"scoring","category":"unclassified","evidence":"observed hard failure; causal attribution requires separate evidence"}
+{"case_id":"derive-authorized-decision","candidate":"pipe-v1","stage":"scoring","category":"unclassified","evidence":"observed hard failure; causal attribution requires separate evidence"}
+{"case_id":"derive-autonomous","candidate":"direct-v1","stage":"scoring","category":"unclassified","evidence":"observed hard failure; causal attribution requires separate evidence"}
+{"case_id":"derive-autonomous","candidate":"nl-v1","stage":"scoring","category":"unclassified","evidence":"observed hard failure; causal attribution requires separate evidence"}
+{"case_id":"derive-epistemic-evidence","candidate":"direct-v1","stage":"scoring","category":"unclassified","evidence":"observed hard failure; causal attribution requires separate evidence"}
+{"case_id":"derive-epistemic-evidence","candidate":"nl-v1","stage":"scoring","category":"unclassified","evidence":"observed hard failure; causal attribution requires separate evidence"}
+{"case_id":"derive-human-boundary","candidate":"json-v1","stage":"scoring","category":"unclassified","evidence":"observed hard failure; causal attribution requires separate evidence"}
+{"case_id":"derive-human-boundary","candidate":"nl-v1","stage":"scoring","category":"unclassified","evidence":"observed hard failure; causal attribution requires separate evidence"}

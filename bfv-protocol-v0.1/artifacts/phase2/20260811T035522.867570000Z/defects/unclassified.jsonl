@@ -1,0 +1,4 @@
+{"case_id":"copy-multirecord","candidate":"nl-v1","stage":"scoring","category":"unclassified","evidence":"observed hard failure; causal attribution requires separate evidence"}
+{"case_id":"derive-authorized-decision","candidate":"direct-v1","stage":"scoring","category":"unclassified","evidence":"observed hard failure; causal attribution requires separate evidence"}
+{"case_id":"derive-authorized-decision","candidate":"nl-v1","stage":"scoring","category":"unclassified","evidence":"observed hard failure; causal attribution requires separate evidence"}
+{"case_id":"derive-epistemic-evidence","candidate":"direct-v1","stage":"scoring","category":"unclassified","evidence":"observed hard failure; causal attribution requires separate evidence"}

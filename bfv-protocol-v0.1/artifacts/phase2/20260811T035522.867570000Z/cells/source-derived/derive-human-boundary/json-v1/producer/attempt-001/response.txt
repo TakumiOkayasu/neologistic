@@ -1,0 +1,1 @@
+{"records":[{"kind":"Q1","target":"CONTRACT:legacy-api","content":"Choose whether to retain the legacy public API.","recommendation":"Retain the legacy public API.","evidence":"analysis:compat#9","bounds":"human-only irreversible public compatibility decision"}]}

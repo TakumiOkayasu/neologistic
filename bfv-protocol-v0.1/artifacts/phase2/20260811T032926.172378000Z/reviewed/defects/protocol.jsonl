@@ -1,0 +1,1 @@
+{"stage":"nl-v1-codec","category":"protocol","evidence":"all five nl-v1 producers emitted the visible R1:, Q1:, or D1: template label; the initial decoder omitted those literal labels and rejected every otherwise conforming line"}

@@ -1,0 +1,5 @@
+Serialize exactly one JSON object with key "records" containing an array.
+R1 keys: kind,target,epistemic,content,evidence,bounds.
+Q1 keys: kind,target,content,recommendation,evidence,bounds.
+D1 keys: kind,target,content,authority_reference,bounds.
+Use JSON null for absent evidence or bounds. Do not add keys.

@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019feede-40b6-72b3-a073-1355c09ecd54"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"records\":[{\"kind\":\"R1\",\"target\":\"CHECK:unit\",\"epistemic\":\"OV\",\"content\":\"unit tests pass\",\"evidence\":\"test:unit#42\",\"bounds\":\"fixture environment\"},{\"kind\":\"R1\",\"target\":\"ASSERT:production\",\"epistemic\":\"IU\",\"content\":\"production behavior is unchanged\",\"evidence\":\"analysis:extrapolation#1\",\"bounds\":\"production runtime not observed\"}],\"task\":{\"choice\":\"hold-release\",\"route\":\"continue\",\"support_target\":\"ASSERT:production\",\"support_epistemic\":\"IU\",\"support_evidence\":\"analysis:extrapolation#1\",\"authority_reference\":null}}"}}
+{"type":"turn.completed","usage":{"input_tokens":15512,"cached_input_tokens":6912,"cache_write_input_tokens":0,"output_tokens":176,"reasoning_output_tokens":44}}

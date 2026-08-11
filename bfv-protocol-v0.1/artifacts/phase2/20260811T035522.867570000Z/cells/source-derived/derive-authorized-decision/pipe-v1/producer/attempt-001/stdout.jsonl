@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019feefa-654c-7dc1-bf48-16a6ab7c7141"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"R1|CHECK:canary|OV|fixture canary check passes|test:canary#17|fixture environment\nD1|DECISION:rollout|use a staged rollout|HUMAN-DECISION:release#2026-08-10|fixture release only"}}
+{"type":"turn.completed","usage":{"input_tokens":15753,"cached_input_tokens":15104,"cache_write_input_tokens":0,"output_tokens":63,"reasoning_output_tokens":0}}

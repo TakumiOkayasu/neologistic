@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019feee2-67f7-7762-bc60-95f2e3af9da2"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"records\":[{\"kind\":\"D1\",\"target\":\"DECISION:rollout\",\"content\":\"use a staged rollout\",\"authority_reference\":\"HUMAN-DECISION:release#2026-08-10\",\"bounds\":\"fixture release only\"},{\"kind\":\"R1\",\"target\":\"CHECK:canary\",\"epistemic\":\"OV\",\"content\":\"fixture canary check passes\",\"evidence\":\"test:canary#17\",\"bounds\":\"fixture environment\"}]}"}}
+{"type":"turn.completed","usage":{"input_tokens":15412,"cached_input_tokens":6912,"cache_write_input_tokens":0,"output_tokens":95,"reasoning_output_tokens":0}}

@@ -1,0 +1,1 @@
+Do not use tools. Output exactly this JSON object and nothing else: {"phase2_smoke":true}

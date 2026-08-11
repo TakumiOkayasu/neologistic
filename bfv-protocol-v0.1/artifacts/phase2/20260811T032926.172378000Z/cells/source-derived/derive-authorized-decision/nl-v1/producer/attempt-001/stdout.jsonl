@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019feee1-e66f-7c90-81cb-121d4638cd35"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"R1: For target \"CHECK:canary\", the observed and verified result is \"fixture canary check passes\". Evidence: \"test:canary#17\". Bounds: \"fixture environment\".\nD1: For target \"DECISION:rollout\", the authorized decision is \"use a staged rollout\". Authority reference: \"HUMAN-DECISION:release#2026-08-10\". Bounds: \"fixture release only\"."}}
+{"type":"turn.completed","usage":{"input_tokens":15486,"cached_input_tokens":6912,"cache_write_input_tokens":0,"output_tokens":93,"reasoning_output_tokens":0}}

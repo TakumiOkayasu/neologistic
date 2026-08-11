@@ -1,0 +1,1 @@
+{"records":[{"kind":"R1","target":"CHECK:unit","epistemic":"OV","content":"unit tests pass","evidence":"test:unit#42","bounds":"fixture environment"},{"kind":"R1","target":"ASSERT:production","epistemic":"IU","content":"production behavior is unchanged","evidence":"analysis:extrapolation#1","bounds":"production runtime not observed"}]}

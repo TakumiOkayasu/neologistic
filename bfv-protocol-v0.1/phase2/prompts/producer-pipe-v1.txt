@@ -1,0 +1,5 @@
+Serialize LF-delimited BFV pipe-v1 records.
+R1|target|epistemic|conclusion|evidence|bounds
+Q1|target|request|recommendation|evidence|bounds
+D1|target|decision|authority-reference|bounds
+Epistemic is origin O/I/S plus state U/V/R. Use - for null. Escape backslash, pipe, LF, CR, TAB, and a literal single hyphen as \\, \|, \n, \r, \t, and \-.

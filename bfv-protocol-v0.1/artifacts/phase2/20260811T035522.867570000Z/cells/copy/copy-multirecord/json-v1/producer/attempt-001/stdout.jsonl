@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019feef6-cff1-7e02-be1b-80f83085c506"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"records\":[{\"kind\":\"R1\",\"target\":\"CHECK:unit\",\"epistemic\":\"OV\",\"content\":\"unit tests pass\",\"evidence\":\"test:unit#42\",\"bounds\":\"fixture environment\"},{\"kind\":\"R1\",\"target\":\"ASSERT:production\",\"epistemic\":\"IU\",\"content\":\"production behavior is unchanged\",\"evidence\":\"analysis:extrapolation#1\",\"bounds\":\"production runtime not observed\"}]}"}}
+{"type":"turn.completed","usage":{"input_tokens":15389,"cached_input_tokens":6912,"cache_write_input_tokens":0,"output_tokens":88,"reasoning_output_tokens":0}}

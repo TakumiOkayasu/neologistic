@@ -1,0 +1,498 @@
+[
+  {
+    "candidate": "direct-v1",
+    "expected_cells": 5,
+    "observed_cells": 5,
+    "copy_cells": 1,
+    "derivation_cells": 4,
+    "identity_producer_cells": 5,
+    "serialization_eligible_cells": 0,
+    "serialization_failures": 0,
+    "producer_derivation_eligible_cells": 0,
+    "producer_derivation_successes": 0,
+    "consumption_eligible_cells": 5,
+    "consumption_semantic_successes": 3,
+    "consumption_semantic_failures": 2,
+    "consumer_parse_failures": 0,
+    "transfer_semantic_successes": 3,
+    "transfer_semantic_failures": 2,
+    "downstream_task_successes": 5,
+    "downstream_task_failures": 0,
+    "q1_false_positives": 0,
+    "q1_false_negatives": 0,
+    "routing_failures": 0,
+    "epistemic_failures": 2,
+    "epistemic_missing": 0,
+    "epistemic_promotions": 0,
+    "evidence_failures": 0,
+    "evidence_missing": 0,
+    "evidence_misassociated": 0,
+    "verified_without_evidence": 0,
+    "bounds_failures": 0,
+    "d1_transmission_failures": 0,
+    "d1_authority_failures": 0,
+    "d1_invented": 0,
+    "punctuation_only_variations": 0,
+    "capitalization_only_variations": 0,
+    "runtime_hard_failure_attempts": 0,
+    "hard_failures": 2,
+    "cost": {
+      "cli_invocations": 5,
+      "runtime_retries": 0,
+      "input_tokens": {
+        "available": true,
+        "value": 77609,
+        "observed_total": 77609,
+        "reported_calls": 5,
+        "unreported_calls": 0
+      },
+      "uncached_input_tokens": {
+        "available": true,
+        "value": 30761,
+        "observed_total": 30761,
+        "reported_calls": 5,
+        "unreported_calls": 0
+      },
+      "cached_input_tokens": {
+        "available": true,
+        "value": 46848,
+        "observed_total": 46848,
+        "reported_calls": 5,
+        "unreported_calls": 0
+      },
+      "cache_write_input_tokens": {
+        "available": true,
+        "value": 0,
+        "observed_total": 0,
+        "reported_calls": 5,
+        "unreported_calls": 0
+      },
+      "output_tokens": {
+        "available": true,
+        "value": 1017,
+        "observed_total": 1017,
+        "reported_calls": 5,
+        "unreported_calls": 0
+      },
+      "reasoning_output_tokens": {
+        "available": true,
+        "value": 372,
+        "observed_total": 372,
+        "reported_calls": 5,
+        "unreported_calls": 0
+      },
+      "instruction_tokens": {
+        "available": false,
+        "value": null,
+        "observed_total": 0,
+        "reported_calls": 0,
+        "unreported_calls": 5,
+        "reason": "Codex turn usage does not separate instruction tokens from case input tokens"
+      },
+      "task_input_tokens": {
+        "available": false,
+        "value": null,
+        "observed_total": 0,
+        "reported_calls": 0,
+        "unreported_calls": 5,
+        "reason": "Codex turn usage does not separate case input tokens from instruction tokens"
+      },
+      "provider_internal_requests": {
+        "available": false,
+        "value": null,
+        "observed_total": 0,
+        "reported_calls": 0,
+        "unreported_calls": 5,
+        "reason": "Codex CLI invocation count is observed; internal provider request count is not exposed"
+      },
+      "monetary_cost": {
+        "available": false,
+        "value": null,
+        "observed_total": 0,
+        "reported_calls": 0,
+        "unreported_calls": 5,
+        "reason": "no billing amount is reported by the Codex event stream"
+      }
+    },
+    "defects": {
+      "fixture": 0,
+      "model": 0,
+      "protocol": 0,
+      "runtime": 0,
+      "scorer": 0,
+      "unclassified": 0
+    }
+  },
+  {
+    "candidate": "nl-v1",
+    "expected_cells": 5,
+    "observed_cells": 5,
+    "copy_cells": 1,
+    "derivation_cells": 4,
+    "identity_producer_cells": 0,
+    "serialization_eligible_cells": 5,
+    "serialization_failures": 0,
+    "producer_derivation_eligible_cells": 4,
+    "producer_derivation_successes": 4,
+    "consumption_eligible_cells": 5,
+    "consumption_semantic_successes": 3,
+    "consumption_semantic_failures": 2,
+    "consumer_parse_failures": 0,
+    "transfer_semantic_successes": 3,
+    "transfer_semantic_failures": 2,
+    "downstream_task_successes": 5,
+    "downstream_task_failures": 0,
+    "q1_false_positives": 0,
+    "q1_false_negatives": 0,
+    "routing_failures": 0,
+    "epistemic_failures": 2,
+    "epistemic_missing": 0,
+    "epistemic_promotions": 0,
+    "evidence_failures": 0,
+    "evidence_missing": 0,
+    "evidence_misassociated": 0,
+    "verified_without_evidence": 0,
+    "bounds_failures": 0,
+    "d1_transmission_failures": 0,
+    "d1_authority_failures": 0,
+    "d1_invented": 0,
+    "punctuation_only_variations": 0,
+    "capitalization_only_variations": 2,
+    "runtime_hard_failure_attempts": 0,
+    "hard_failures": 2,
+    "cost": {
+      "cli_invocations": 10,
+      "runtime_retries": 0,
+      "input_tokens": {
+        "available": true,
+        "value": 154871,
+        "observed_total": 154871,
+        "reported_calls": 10,
+        "unreported_calls": 0
+      },
+      "uncached_input_tokens": {
+        "available": true,
+        "value": 78583,
+        "observed_total": 78583,
+        "reported_calls": 10,
+        "unreported_calls": 0
+      },
+      "cached_input_tokens": {
+        "available": true,
+        "value": 76288,
+        "observed_total": 76288,
+        "reported_calls": 10,
+        "unreported_calls": 0
+      },
+      "cache_write_input_tokens": {
+        "available": true,
+        "value": 0,
+        "observed_total": 0,
+        "reported_calls": 10,
+        "unreported_calls": 0
+      },
+      "output_tokens": {
+        "available": true,
+        "value": 1348,
+        "observed_total": 1348,
+        "reported_calls": 10,
+        "unreported_calls": 0
+      },
+      "reasoning_output_tokens": {
+        "available": true,
+        "value": 308,
+        "observed_total": 308,
+        "reported_calls": 10,
+        "unreported_calls": 0
+      },
+      "instruction_tokens": {
+        "available": false,
+        "value": null,
+        "observed_total": 0,
+        "reported_calls": 0,
+        "unreported_calls": 10,
+        "reason": "Codex turn usage does not separate instruction tokens from case input tokens"
+      },
+      "task_input_tokens": {
+        "available": false,
+        "value": null,
+        "observed_total": 0,
+        "reported_calls": 0,
+        "unreported_calls": 10,
+        "reason": "Codex turn usage does not separate case input tokens from instruction tokens"
+      },
+      "provider_internal_requests": {
+        "available": false,
+        "value": null,
+        "observed_total": 0,
+        "reported_calls": 0,
+        "unreported_calls": 10,
+        "reason": "Codex CLI invocation count is observed; internal provider request count is not exposed"
+      },
+      "monetary_cost": {
+        "available": false,
+        "value": null,
+        "observed_total": 0,
+        "reported_calls": 0,
+        "unreported_calls": 10,
+        "reason": "no billing amount is reported by the Codex event stream"
+      }
+    },
+    "defects": {
+      "fixture": 0,
+      "model": 0,
+      "protocol": 0,
+      "runtime": 0,
+      "scorer": 0,
+      "unclassified": 0
+    }
+  },
+  {
+    "candidate": "pipe-v1",
+    "expected_cells": 5,
+    "observed_cells": 5,
+    "copy_cells": 1,
+    "derivation_cells": 4,
+    "identity_producer_cells": 0,
+    "serialization_eligible_cells": 5,
+    "serialization_failures": 0,
+    "producer_derivation_eligible_cells": 4,
+    "producer_derivation_successes": 4,
+    "consumption_eligible_cells": 5,
+    "consumption_semantic_successes": 5,
+    "consumption_semantic_failures": 0,
+    "consumer_parse_failures": 0,
+    "transfer_semantic_successes": 5,
+    "transfer_semantic_failures": 0,
+    "downstream_task_successes": 5,
+    "downstream_task_failures": 0,
+    "q1_false_positives": 0,
+    "q1_false_negatives": 0,
+    "routing_failures": 0,
+    "epistemic_failures": 0,
+    "epistemic_missing": 0,
+    "epistemic_promotions": 0,
+    "evidence_failures": 0,
+    "evidence_missing": 0,
+    "evidence_misassociated": 0,
+    "verified_without_evidence": 0,
+    "bounds_failures": 0,
+    "d1_transmission_failures": 0,
+    "d1_authority_failures": 0,
+    "d1_invented": 0,
+    "punctuation_only_variations": 0,
+    "capitalization_only_variations": 0,
+    "runtime_hard_failure_attempts": 0,
+    "hard_failures": 0,
+    "cost": {
+      "cli_invocations": 10,
+      "runtime_retries": 0,
+      "input_tokens": {
+        "available": true,
+        "value": 156069,
+        "observed_total": 156069,
+        "reported_calls": 10,
+        "unreported_calls": 0
+      },
+      "uncached_input_tokens": {
+        "available": true,
+        "value": 64421,
+        "observed_total": 64421,
+        "reported_calls": 10,
+        "unreported_calls": 0
+      },
+      "cached_input_tokens": {
+        "available": true,
+        "value": 91648,
+        "observed_total": 91648,
+        "reported_calls": 10,
+        "unreported_calls": 0
+      },
+      "cache_write_input_tokens": {
+        "available": true,
+        "value": 0,
+        "observed_total": 0,
+        "reported_calls": 10,
+        "unreported_calls": 0
+      },
+      "output_tokens": {
+        "available": true,
+        "value": 1148,
+        "observed_total": 1148,
+        "reported_calls": 10,
+        "unreported_calls": 0
+      },
+      "reasoning_output_tokens": {
+        "available": true,
+        "value": 269,
+        "observed_total": 269,
+        "reported_calls": 10,
+        "unreported_calls": 0
+      },
+      "instruction_tokens": {
+        "available": false,
+        "value": null,
+        "observed_total": 0,
+        "reported_calls": 0,
+        "unreported_calls": 10,
+        "reason": "Codex turn usage does not separate instruction tokens from case input tokens"
+      },
+      "task_input_tokens": {
+        "available": false,
+        "value": null,
+        "observed_total": 0,
+        "reported_calls": 0,
+        "unreported_calls": 10,
+        "reason": "Codex turn usage does not separate case input tokens from instruction tokens"
+      },
+      "provider_internal_requests": {
+        "available": false,
+        "value": null,
+        "observed_total": 0,
+        "reported_calls": 0,
+        "unreported_calls": 10,
+        "reason": "Codex CLI invocation count is observed; internal provider request count is not exposed"
+      },
+      "monetary_cost": {
+        "available": false,
+        "value": null,
+        "observed_total": 0,
+        "reported_calls": 0,
+        "unreported_calls": 10,
+        "reason": "no billing amount is reported by the Codex event stream"
+      }
+    },
+    "defects": {
+      "fixture": 0,
+      "model": 0,
+      "protocol": 0,
+      "runtime": 0,
+      "scorer": 0,
+      "unclassified": 0
+    }
+  },
+  {
+    "candidate": "json-v1",
+    "expected_cells": 5,
+    "observed_cells": 5,
+    "copy_cells": 1,
+    "derivation_cells": 4,
+    "identity_producer_cells": 0,
+    "serialization_eligible_cells": 5,
+    "serialization_failures": 0,
+    "producer_derivation_eligible_cells": 4,
+    "producer_derivation_successes": 4,
+    "consumption_eligible_cells": 5,
+    "consumption_semantic_successes": 5,
+    "consumption_semantic_failures": 0,
+    "consumer_parse_failures": 0,
+    "transfer_semantic_successes": 5,
+    "transfer_semantic_failures": 0,
+    "downstream_task_successes": 5,
+    "downstream_task_failures": 0,
+    "q1_false_positives": 0,
+    "q1_false_negatives": 0,
+    "routing_failures": 0,
+    "epistemic_failures": 0,
+    "epistemic_missing": 0,
+    "epistemic_promotions": 0,
+    "evidence_failures": 0,
+    "evidence_missing": 0,
+    "evidence_misassociated": 0,
+    "verified_without_evidence": 0,
+    "bounds_failures": 0,
+    "d1_transmission_failures": 0,
+    "d1_authority_failures": 0,
+    "d1_invented": 0,
+    "punctuation_only_variations": 0,
+    "capitalization_only_variations": 2,
+    "runtime_hard_failure_attempts": 0,
+    "hard_failures": 0,
+    "cost": {
+      "cli_invocations": 10,
+      "runtime_retries": 0,
+      "input_tokens": {
+        "available": true,
+        "value": 154162,
+        "observed_total": 154162,
+        "reported_calls": 10,
+        "unreported_calls": 0
+      },
+      "uncached_input_tokens": {
+        "available": true,
+        "value": 41010,
+        "observed_total": 41010,
+        "reported_calls": 10,
+        "unreported_calls": 0
+      },
+      "cached_input_tokens": {
+        "available": true,
+        "value": 113152,
+        "observed_total": 113152,
+        "reported_calls": 10,
+        "unreported_calls": 0
+      },
+      "cache_write_input_tokens": {
+        "available": true,
+        "value": 0,
+        "observed_total": 0,
+        "reported_calls": 10,
+        "unreported_calls": 0
+      },
+      "output_tokens": {
+        "available": true,
+        "value": 1356,
+        "observed_total": 1356,
+        "reported_calls": 10,
+        "unreported_calls": 0
+      },
+      "reasoning_output_tokens": {
+        "available": true,
+        "value": 326,
+        "observed_total": 326,
+        "reported_calls": 10,
+        "unreported_calls": 0
+      },
+      "instruction_tokens": {
+        "available": false,
+        "value": null,
+        "observed_total": 0,
+        "reported_calls": 0,
+        "unreported_calls": 10,
+        "reason": "Codex turn usage does not separate instruction tokens from case input tokens"
+      },
+      "task_input_tokens": {
+        "available": false,
+        "value": null,
+        "observed_total": 0,
+        "reported_calls": 0,
+        "unreported_calls": 10,
+        "reason": "Codex turn usage does not separate case input tokens from instruction tokens"
+      },
+      "provider_internal_requests": {
+        "available": false,
+        "value": null,
+        "observed_total": 0,
+        "reported_calls": 0,
+        "unreported_calls": 10,
+        "reason": "Codex CLI invocation count is observed; internal provider request count is not exposed"
+      },
+      "monetary_cost": {
+        "available": false,
+        "value": null,
+        "observed_total": 0,
+        "reported_calls": 0,
+        "unreported_calls": 10,
+        "reason": "no billing amount is reported by the Codex event stream"
+      }
+    },
+    "defects": {
+      "fixture": 0,
+      "model": 0,
+      "protocol": 0,
+      "runtime": 0,
+      "scorer": 0,
+      "unclassified": 0
+    }
+  }
+]

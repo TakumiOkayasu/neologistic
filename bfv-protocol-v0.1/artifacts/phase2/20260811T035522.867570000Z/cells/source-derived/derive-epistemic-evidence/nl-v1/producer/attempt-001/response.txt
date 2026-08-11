@@ -1,0 +1,2 @@
+R1: For target "CHECK:cache-regression", the observed and verified result is "fixture cache regression test passes". Evidence: "test:cache#88". Bounds: "fixture execution only".
+R1: For target "ASSERT:production-cause", the inferred and unverified result is "the conversion is the likely production cause". Evidence: "file:cache.go:41". Bounds: "production runtime not observed".

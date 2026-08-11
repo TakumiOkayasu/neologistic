@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "model": "gpt-5.6-sol",
+  "reasoning_effort": "high",
+  "sandbox": "read-only",
+  "approval_policy": "never",
+  "automatic_runtime_retries": 0,
+  "candidates": [
+    "direct-v1",
+    "nl-v1",
+    "pipe-v1",
+    "json-v1"
+  ]
+}

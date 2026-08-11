@@ -1,0 +1,1 @@
+Q1: For target "CONTRACT:legacy-api", human input is required: "Choose whether to retain the legacy public API". Recommendation: "Retain the legacy public API". Evidence: "analysis:compat#9". Blocking boundary: "human-only irreversible public compatibility decision".

@@ -1,0 +1,2 @@
+R1: For target "CHECK:canary", the observed and verified result is "fixture canary check passes". Evidence: "test:canary#17". Bounds: "fixture environment".
+D1: For target "DECISION:rollout", the authorized decision is "use a staged rollout". Authority reference: "HUMAN-DECISION:release#2026-08-10". Bounds: "fixture release only".

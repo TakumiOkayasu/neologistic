@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019feef7-172a-7bc1-9734-57279da80f11"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"R1: For target \"CHECK:cache-regression\", the observed and verified result is \"fixture cache regression test passes\". Evidence: \"test:cache#88\". Bounds: \"fixture execution only\".\nR1: For target \"ASSERT:production-cause\", the inferred and unverified result is \"the conversion is the likely production cause\". Evidence: \"file:cache.go:41\". Bounds: \"production runtime not observed\"."}}
+{"type":"turn.completed","usage":{"input_tokens":15473,"cached_input_tokens":6912,"cache_write_input_tokens":0,"output_tokens":91,"reasoning_output_tokens":0}}

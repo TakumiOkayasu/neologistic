@@ -1,5 +1,7 @@
 # Codex task: run the BFV protocol v0.1 real-model pilot
 
+> Historical handoff, completed. The resulting single-candidate artifacts are under `artifacts/real-model/`; the subsequent matched comparison is documented in `docs/PHASE2_RESULTS.md`.
+
 Work autonomously until a decision reserved to the human is genuinely required.
 
 ## Contract

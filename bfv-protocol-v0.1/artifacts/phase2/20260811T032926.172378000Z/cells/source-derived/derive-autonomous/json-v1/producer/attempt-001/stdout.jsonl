@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019feee0-46a3-70c3-aa3a-248ce6bc5284"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"records\":[{\"kind\":\"R1\",\"target\":\"RECOVERY:formatter\",\"epistemic\":\"IU\",\"content\":\"the formatter failure is recoverable autonomously\",\"evidence\":\"RUNBOOK:auto#4\",\"bounds\":\"disposable workspace directory only\"}]}"}}
+{"type":"turn.completed","usage":{"input_tokens":15379,"cached_input_tokens":13056,"cache_write_input_tokens":0,"output_tokens":91,"reasoning_output_tokens":34}}

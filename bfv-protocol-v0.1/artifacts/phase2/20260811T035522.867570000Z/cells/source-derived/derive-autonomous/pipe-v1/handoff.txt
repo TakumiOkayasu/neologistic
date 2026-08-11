@@ -1,0 +1,1 @@
+R1|RECOVERY:formatter|IU|the formatter failure is recoverable autonomously|RUNBOOK:auto#4|disposable workspace directory only

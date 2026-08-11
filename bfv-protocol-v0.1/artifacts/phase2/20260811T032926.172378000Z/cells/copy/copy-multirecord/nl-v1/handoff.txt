@@ -1,0 +1,2 @@
+R1: For target "CHECK:unit", the observed and verified result is "unit tests pass". Evidence: "test:unit#42". Bounds: "fixture environment".
+R1: For target "ASSERT:production", the inferred and unverified result is "production behavior is unchanged". Evidence: "analysis:extrapolation#1". Bounds: "production runtime not observed".

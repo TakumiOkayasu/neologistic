@@ -1,6 +1,6 @@
 # Real-model measurement handoff
 
-## Required external capability
+## Historical base-runner capability
 
 A runner that can provide:
 
@@ -38,4 +38,4 @@ go run ./cmd/bfvctl eval \
 
 ## Stop boundary
 
-The vendor-neutral package is complete when deterministic checks pass. Real-model measurement requires a selected model/runtime with usable credentials or an already connected CLI/API.
+The historical single-candidate handoff remains reproducible under `artifacts/real-model/`. The authenticated Phase 2 runner now lives under `phase2/` and records producer and downstream-consumer attempts, raw JSONL, exact extracted response text, nullable usage, exit status, stderr, model/config identity, scorer results, defect buckets, and checksums. The completed result is documented in `docs/PHASE2_RESULTS.md`.

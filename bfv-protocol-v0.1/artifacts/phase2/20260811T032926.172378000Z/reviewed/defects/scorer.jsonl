@@ -1,0 +1,2 @@
+{"stage":"consumer-scorer","category":"scorer","evidence":"the initial task validator required support_evidence to be a string even when the selected support record was a D1, which has no evidence field; all four consumers consistently returned null"}
+{"stage":"semantic-scorer","category":"scorer","evidence":"derive-human-boundary/json-v1 changed only sentence-initial capitalization and terminal punctuation in two prose fields; the initial scorer incorrectly treated this surface rendering as a semantic mismatch"}

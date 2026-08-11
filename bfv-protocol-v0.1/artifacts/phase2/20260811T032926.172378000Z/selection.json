@@ -1,0 +1,16 @@
+{
+  "status": "no_winner",
+  "winner": null,
+  "rule": "winner requires complete coverage, no hard failures, and one candidate that weakly dominates every other candidate on correctness and every observed cost dimension with at least one strict improvement",
+  "next_discriminating_test": {
+    "case_id": "copy-multirecord",
+    "candidates": [
+      "direct-v1",
+      "nl-v1",
+      "pipe-v1",
+      "json-v1"
+    ],
+    "trigger": "observed-hard-failure",
+    "purpose": "after evidence-backed defect classification or repair, rerun this one matched case once across all four candidates"
+  }
+}

@@ -1,0 +1,2 @@
+D1|DECISION:rollout|use a staged rollout|HUMAN-DECISION:release#2026-08-10|fixture release only
+R1|CHECK:canary|OV|fixture canary check passes|test:canary#17|fixture environment

@@ -1,0 +1,14 @@
+{
+  "status": "no_winner",
+  "winner": null,
+  "rule": "winner requires complete coverage, no hard failures, and one candidate that weakly dominates every other candidate on correctness and every observed cost dimension with at least one strict improvement",
+  "next_discriminating_test": {
+    "case_id": "derive-authorized-decision",
+    "candidates": [
+      "direct-v1",
+      "json-v1"
+    ],
+    "trigger": "observed-correctness-cost-frontier",
+    "purpose": "run one matched second observation to distinguish stable semantic loss in the cheaper candidate from one-shot model variance; the initial hard failure remains part of the evidence"
+  }
+}

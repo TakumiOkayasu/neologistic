@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019feede-9ce1-7013-ae66-e4a3aaa4b099"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"R1|CHECK:unit|OV|unit tests pass|test:unit#42|fixture environment\nR1|ASSERT:production|IU|production behavior is unchanged|analysis:extrapolation#1|production runtime not observed"}}
+{"type":"turn.completed","usage":{"input_tokens":15727,"cached_input_tokens":6912,"cache_write_input_tokens":0,"output_tokens":52,"reasoning_output_tokens":0}}

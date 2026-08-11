@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019feef9-c920-7122-9951-5c3d3643cec6"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"Q1|CONTRACT:legacy-api|choose whether to retain the legacy public API|retain the legacy public API|analysis:compat#9|human-only irreversible public compatibility decision"}}
+{"type":"turn.completed","usage":{"input_tokens":15731,"cached_input_tokens":6912,"cache_write_input_tokens":0,"output_tokens":40,"reasoning_output_tokens":0}}

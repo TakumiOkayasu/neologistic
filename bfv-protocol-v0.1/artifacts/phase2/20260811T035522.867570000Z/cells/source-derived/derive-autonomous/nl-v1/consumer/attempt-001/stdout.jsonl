@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019feef8-f6de-7a32-be6a-8c725bbc2bc7"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"records\":[{\"kind\":\"R1\",\"target\":\"RECOVERY:formatter\",\"epistemic\":\"inferred and unverified\",\"content\":\"the formatter failure is recoverable autonomously\",\"evidence\":\"RUNBOOK:auto#4\",\"bounds\":\"disposable workspace directory only\"}],\"task\":{\"choice\":\"retry-autonomously\",\"route\":\"continue\",\"support_target\":\"RECOVERY:formatter\",\"support_epistemic\":\"inferred and unverified\",\"support_evidence\":\"RUNBOOK:auto#4\",\"authority_reference\":null}}"}}
+{"type":"turn.completed","usage":{"input_tokens":15471,"cached_input_tokens":6912,"cache_write_input_tokens":0,"output_tokens":144,"reasoning_output_tokens":36}}

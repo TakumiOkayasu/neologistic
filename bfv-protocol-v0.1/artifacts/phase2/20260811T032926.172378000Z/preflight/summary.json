@@ -1,0 +1,76 @@
+{
+  "codex-exec-help": {
+    "exit_status": 0,
+    "start_error": ""
+  },
+  "codex-login-status": {
+    "exit_status": 0,
+    "start_error": ""
+  },
+  "codex-version": {
+    "exit_status": 0,
+    "start_error": ""
+  },
+  "environment": {
+    "approval_policy": "never",
+    "automatic_runtime_retries": 0,
+    "codex_executable": "/Users/yamazaki/.local/bin/codex",
+    "codex_executable_sha256": "19c4f144c5226a9f17c58e6f0fa854843b0f77a6eb420f40e2745a12f10f5d37",
+    "frozen_input_sha256": {
+      "phase2/codex-events-to-response.jq": "79ba7e26ab35b05b0673b4cf8b4d796ca93f34b8abaef8e9d09c206a16e3e775",
+      "phase2/config.json": "ac2cbb36f8d22df0e89ba2013acb69fc2a6a0351251faa276967fac9e39fd95f",
+      "phase2/fixtures/cases.jsonl": "107ce2e0ad6c23a65beb2cee6019abe6b2d8639691db81dd21ae99a344db823a",
+      "phase2/prompts/consumer.txt": "a76ee9de33e232a8da21903b59e64cd9b2af56789a1c2c7a28e01396ec1e5e19",
+      "phase2/prompts/producer-common.txt": "d502a7d6153eacbb4387a3af3ee1321fa3d4b7f59094f13287f764e80fdf6d3f",
+      "phase2/prompts/producer-json-v1.txt": "bc216e0f7e919a8a71e68acaa3de6330e57c8a60fe3f44cfe550a07e57a4f687",
+      "phase2/prompts/producer-nl-v1.txt": "637ca353bb4a7b9bed7807ca48cb92e1067670c79ae3b1a0bf01ab0685e47db8",
+      "phase2/prompts/producer-pipe-v1.txt": "b06cddbae30c2fd055d247596982d74a93efda4466e35955dcd0272178f09671",
+      "phase2/prompts/smoke.txt": "7f505c033a8774af502385b4becb9ffa58e4be7173deb4cfaebf5cc89b628ecf",
+      "prompts/protocol-instruction.md": "7a3d9bd432c9c5792fd5927f3f82d954a7e04d9f221b51fb8fc5c7cc1093784f"
+    },
+    "model": "gpt-5.6-sol",
+    "observed_adapter": "last item.completed agent_message text plus last turn.completed usage; raw text is not trimmed, normalized, or repaired",
+    "reasoning_effort": "high",
+    "sandbox": "read-only",
+    "source_revision": "12b1b3f63fa9efe26740b9489239e08d7b520d71",
+    "source_status": "?? artifacts/phase2/\n?? cmd/phase2ctl/\n?? internal/phase2/\n?? phase2/",
+    "usage_fields": [
+      "input_tokens",
+      "cached_input_tokens",
+      "cache_write_input_tokens",
+      "output_tokens",
+      "reasoning_output_tokens"
+    ]
+  },
+  "jq-version": {
+    "exit_status": 0,
+    "start_error": ""
+  },
+  "smoke": {
+    "cost_scope": "preflight only; excluded from every candidate cost vector",
+    "raw_response": "{\"phase2_smoke\":true}",
+    "runtime_ok": true,
+    "stage": {
+      "mode": "model",
+      "attempts": [
+        {
+          "attempt": 1,
+          "call_executed": true,
+          "runtime_ok": true,
+          "prompt": "Do not use tools. Output exactly this JSON object and nothing else: {\"phase2_smoke\":true}\n",
+          "raw_events": "{\"type\":\"thread.started\",\"thread_id\":\"019feede-2ee4-7e73-8a56-a579d15bb585\"}\n{\"type\":\"turn.started\"}\n{\"type\":\"item.completed\",\"item\":{\"id\":\"item_0\",\"type\":\"agent_message\",\"text\":\"{\\\"phase2_smoke\\\":true}\"}}\n{\"type\":\"turn.completed\",\"usage\":{\"input_tokens\":15099,\"cached_input_tokens\":6912,\"cache_write_input_tokens\":0,\"output_tokens\":12,\"reasoning_output_tokens\":0}}\n",
+          "response": "{\"phase2_smoke\":true}",
+          "usage": {
+            "input_tokens": 15099,
+            "cached_input_tokens": 6912,
+            "cache_write_input_tokens": 0,
+            "output_tokens": 12,
+            "reasoning_output_tokens": 0
+          },
+          "exit_status": 0,
+          "stderr": "2026-08-11T03:29:26.250347Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-11T03:29:26.250786Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-11T03:29:26.251071Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-11T03:29:26.251371Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-11T03:29:26.251654Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n2026-08-11T03:29:26.251972Z  WARN codex_rollout::list: state db discrepancy during find_thread_path_by_id_str_in_subdir: falling_back\n"
+        }
+      ]
+    }
+  }
+}

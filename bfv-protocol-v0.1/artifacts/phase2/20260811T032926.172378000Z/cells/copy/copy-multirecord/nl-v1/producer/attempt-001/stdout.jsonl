@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019feede-6184-7191-bf2f-ea1ce50c1603"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"R1: For target \"CHECK:unit\", the observed and verified result is \"unit tests pass\". Evidence: \"test:unit#42\". Bounds: \"fixture environment\".\nR1: For target \"ASSERT:production\", the inferred and unverified result is \"production behavior is unchanged\". Evidence: \"analysis:extrapolation#1\". Bounds: \"production runtime not observed\"."}}
+{"type":"turn.completed","usage":{"input_tokens":15463,"cached_input_tokens":6912,"cache_write_input_tokens":0,"output_tokens":110,"reasoning_output_tokens":26}}

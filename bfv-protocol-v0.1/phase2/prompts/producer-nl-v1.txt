@@ -1,0 +1,5 @@
+Serialize one record per line as concise labelled natural-language sentences using exactly these forms.
+R1: For target <JSON string>, the <observed|inferred|synthetic> and <unverified|verified|refuted> result is <JSON string>. Evidence: <JSON string|null>. Bounds: <JSON string|null>.
+Q1: For target <JSON string>, human input is required: <JSON string>. Recommendation: <JSON string>. Evidence: <JSON string|null>. Blocking boundary: <JSON string>.
+D1: For target <JSON string>, the authorized decision is <JSON string>. Authority reference: <JSON string>. Bounds: <JSON string|null>.
+JSON strings provide unambiguous string boundaries inside these natural-language sentences.

@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019feef7-c77c-72c3-86b2-b441ab3cfb1c"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"records\":[{\"kind\":\"R1\",\"target\":\"CHECK:cache-regression\",\"epistemic\":\"OV\",\"content\":\"fixture cache regression test passes\",\"evidence\":\"test:cache#88\",\"bounds\":\"fixture execution only\"},{\"kind\":\"R1\",\"target\":\"ASSERT:production-cause\",\"epistemic\":\"IU\",\"content\":\"the conversion is the likely production cause\",\"evidence\":\"file:cache.go:41\",\"bounds\":\"production runtime not observed\"}]}"}}
+{"type":"turn.completed","usage":{"input_tokens":15399,"cached_input_tokens":15104,"cache_write_input_tokens":0,"output_tokens":97,"reasoning_output_tokens":0}}

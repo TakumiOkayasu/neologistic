@@ -1,0 +1,162 @@
+[
+  {
+    "candidate": "direct-v1",
+    "candidate_order_index": 0,
+    "case_id": "copy-multirecord",
+    "cohort": "copy",
+    "fixture_index": 0,
+    "sequence": 1
+  },
+  {
+    "candidate": "nl-v1",
+    "candidate_order_index": 1,
+    "case_id": "copy-multirecord",
+    "cohort": "copy",
+    "fixture_index": 0,
+    "sequence": 2
+  },
+  {
+    "candidate": "pipe-v1",
+    "candidate_order_index": 2,
+    "case_id": "copy-multirecord",
+    "cohort": "copy",
+    "fixture_index": 0,
+    "sequence": 3
+  },
+  {
+    "candidate": "json-v1",
+    "candidate_order_index": 3,
+    "case_id": "copy-multirecord",
+    "cohort": "copy",
+    "fixture_index": 0,
+    "sequence": 4
+  },
+  {
+    "candidate": "nl-v1",
+    "candidate_order_index": 0,
+    "case_id": "derive-epistemic-evidence",
+    "cohort": "source-derived",
+    "fixture_index": 1,
+    "sequence": 5
+  },
+  {
+    "candidate": "pipe-v1",
+    "candidate_order_index": 1,
+    "case_id": "derive-epistemic-evidence",
+    "cohort": "source-derived",
+    "fixture_index": 1,
+    "sequence": 6
+  },
+  {
+    "candidate": "json-v1",
+    "candidate_order_index": 2,
+    "case_id": "derive-epistemic-evidence",
+    "cohort": "source-derived",
+    "fixture_index": 1,
+    "sequence": 7
+  },
+  {
+    "candidate": "direct-v1",
+    "candidate_order_index": 3,
+    "case_id": "derive-epistemic-evidence",
+    "cohort": "source-derived",
+    "fixture_index": 1,
+    "sequence": 8
+  },
+  {
+    "candidate": "pipe-v1",
+    "candidate_order_index": 0,
+    "case_id": "derive-autonomous",
+    "cohort": "source-derived",
+    "fixture_index": 2,
+    "sequence": 9
+  },
+  {
+    "candidate": "json-v1",
+    "candidate_order_index": 1,
+    "case_id": "derive-autonomous",
+    "cohort": "source-derived",
+    "fixture_index": 2,
+    "sequence": 10
+  },
+  {
+    "candidate": "direct-v1",
+    "candidate_order_index": 2,
+    "case_id": "derive-autonomous",
+    "cohort": "source-derived",
+    "fixture_index": 2,
+    "sequence": 11
+  },
+  {
+    "candidate": "nl-v1",
+    "candidate_order_index": 3,
+    "case_id": "derive-autonomous",
+    "cohort": "source-derived",
+    "fixture_index": 2,
+    "sequence": 12
+  },
+  {
+    "candidate": "json-v1",
+    "candidate_order_index": 0,
+    "case_id": "derive-human-boundary",
+    "cohort": "source-derived",
+    "fixture_index": 3,
+    "sequence": 13
+  },
+  {
+    "candidate": "direct-v1",
+    "candidate_order_index": 1,
+    "case_id": "derive-human-boundary",
+    "cohort": "source-derived",
+    "fixture_index": 3,
+    "sequence": 14
+  },
+  {
+    "candidate": "nl-v1",
+    "candidate_order_index": 2,
+    "case_id": "derive-human-boundary",
+    "cohort": "source-derived",
+    "fixture_index": 3,
+    "sequence": 15
+  },
+  {
+    "candidate": "pipe-v1",
+    "candidate_order_index": 3,
+    "case_id": "derive-human-boundary",
+    "cohort": "source-derived",
+    "fixture_index": 3,
+    "sequence": 16
+  },
+  {
+    "candidate": "direct-v1",
+    "candidate_order_index": 0,
+    "case_id": "derive-authorized-decision",
+    "cohort": "source-derived",
+    "fixture_index": 4,
+    "sequence": 17
+  },
+  {
+    "candidate": "nl-v1",
+    "candidate_order_index": 1,
+    "case_id": "derive-authorized-decision",
+    "cohort": "source-derived",
+    "fixture_index": 4,
+    "sequence": 18
+  },
+  {
+    "candidate": "pipe-v1",
+    "candidate_order_index": 2,
+    "case_id": "derive-authorized-decision",
+    "cohort": "source-derived",
+    "fixture_index": 4,
+    "sequence": 19
+  },
+  {
+    "candidate": "json-v1",
+    "candidate_order_index": 3,
+    "case_id": "derive-authorized-decision",
+    "cohort": "source-derived",
+    "fixture_index": 4,
+    "sequence": 20
+  }
+]

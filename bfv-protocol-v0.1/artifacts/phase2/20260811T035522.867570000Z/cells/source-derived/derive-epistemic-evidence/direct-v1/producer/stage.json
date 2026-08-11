@@ -1,0 +1,5 @@
+{
+  "mode": "not_applicable",
+  "attempts": [],
+  "skipped_reason": "direct-v1 is the raw-source identity baseline and has no producer serialization call"
+}

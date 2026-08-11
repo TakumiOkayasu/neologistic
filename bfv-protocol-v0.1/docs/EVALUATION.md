@@ -35,13 +35,16 @@ Whether a constrained delimiter record produces a better accepted-result-to-tota
 
 ## Candidate comparison
 
-The first real-model run compares:
+The Phase 2 matched run compares:
 
+- raw-source identity transfer (`direct-v1`);
 - concise natural language;
 - `pipe-v1` from this package;
-- an equivalent JSON structured record when the runtime supports constrained output.
+- an equivalent prompt-only JSON structured record (`json-v1`).
 
 The canonical semantic fixture remains the same across candidates. Rendering differences are not scored as semantic improvements.
+
+The corrected 20-cell coverage pilot found no overall winner. `json-v1` and `pipe-v1` had no hard failures, but their mutually exclusive uncached-input, cached-input, output, and reasoning cost components crossed. Direct and NL had epistemic-origin hard failures. See `docs/PHASE2_RESULTS.md`.
 
 ## Sample size
 

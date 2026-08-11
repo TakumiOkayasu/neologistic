@@ -1,0 +1,14 @@
+{
+  "status": "no_winner",
+  "winner": null,
+  "rule": "winner requires complete coverage, no hard failures, and one candidate that weakly dominates every other candidate on correctness and every observed cost dimension with at least one strict improvement",
+  "next_discriminating_test": {
+    "case_id": "derive-autonomous",
+    "candidates": [
+      "pipe-v1",
+      "json-v1"
+    ],
+    "trigger": "observed-safe-cost-vector-crossing",
+    "purpose": "run one matched billing-enabled observation for the safe frontier pair so provider-reported total cost can resolve the crossing uncached-input, cached-input, output, and reasoning vector"
+  }
+}

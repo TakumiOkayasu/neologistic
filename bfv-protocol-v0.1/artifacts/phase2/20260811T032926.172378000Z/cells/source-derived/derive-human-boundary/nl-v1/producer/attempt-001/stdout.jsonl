@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019feee1-3e06-7190-9c7d-ce5b4423200b"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"Q1: For target \"CONTRACT:legacy-api\", human input is required: \"choose whether to retain the legacy public API\". Recommendation: \"retain the legacy public API\". Evidence: \"analysis:compat#9\". Blocking boundary: \"human-only irreversible public compatibility decision\"."}}
+{"type":"turn.completed","usage":{"input_tokens":15463,"cached_input_tokens":6912,"cache_write_input_tokens":0,"output_tokens":60,"reasoning_output_tokens":0}}

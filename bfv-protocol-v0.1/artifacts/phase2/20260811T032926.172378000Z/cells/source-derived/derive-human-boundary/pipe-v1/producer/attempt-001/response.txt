@@ -1,0 +1,1 @@
+Q1|CONTRACT:legacy-api|choose whether to retain the legacy public API|retain the legacy public API|analysis:compat#9|human-only irreversible public compatibility decision

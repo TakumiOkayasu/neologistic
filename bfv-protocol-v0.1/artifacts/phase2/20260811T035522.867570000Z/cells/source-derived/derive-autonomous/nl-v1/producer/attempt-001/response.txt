@@ -1,0 +1,1 @@
+R1: For target "RECOVERY:formatter", the inferred and unverified result is "the formatter failure is recoverable autonomously". Evidence: "RUNBOOK:auto#4". Bounds: "disposable workspace directory only".

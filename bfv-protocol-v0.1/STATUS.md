@@ -8,11 +8,21 @@
 - semantic/routing/epistemic evaluator
 - deterministic, race, and fuzz validation
 - real-model runner contract
+- authenticated `pipe-v1` real-model coverage pilot
+- Phase 2 matched 20-cell candidate coverage pilot
 
-## Open external obligation
+## Phase 2 result
 
-Run the real-model pilot in an environment that has an authenticated model CLI/API and raw usage/event access.
+- Overall winner: none.
+- Hold: `pipe-v1` and `json-v1`; both had zero hard failures, while their uncached/cached/output/reasoning cost components crossed.
+- Reject for this selection: `direct-v1` and `nl-v1` because of epistemic-origin hard failures.
+- Q1, evidence, bounds, D1 transmission/authority, runtime, and retry failures: zero.
+- Evidence: `docs/PHASE2_RESULTS.md` and canonical artifact `artifacts/phase2/20260811T035522.867570000Z/`.
+
+## Next discriminating test
+
+Run exactly one matched, billing-enabled `derive-autonomous` observation for `pipe-v1` and `json-v1` so provider-reported total cost can resolve the observed cost-vector crossing.
 
 ## Human-only decision boundary
 
-No semantic decision is currently required. Human action is required only to make an authenticated real-model environment available or to launch the included Codex handoff there.
+No human decision or credential is currently required. The next test is already specified by the observed correctness/cost frontier.

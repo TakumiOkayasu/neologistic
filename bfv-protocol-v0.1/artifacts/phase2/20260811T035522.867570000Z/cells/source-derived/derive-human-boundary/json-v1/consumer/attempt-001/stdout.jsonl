@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019feef9-3639-7872-b1b8-56a1a5e00bfa"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"records\":[{\"kind\":\"Q1\",\"target\":\"CONTRACT:legacy-api\",\"content\":\"Choose whether to retain the legacy public API.\",\"recommendation\":\"Retain the legacy public API.\",\"evidence\":\"analysis:compat#9\",\"bounds\":\"human-only irreversible public compatibility decision\"}],\"task\":{\"choice\":\"await-human\",\"route\":\"ask-human\",\"support_target\":\"CONTRACT:legacy-api\",\"support_epistemic\":null,\"support_evidence\":\"analysis:compat#9\",\"authority_reference\":null}}"}}
+{"type":"turn.completed","usage":{"input_tokens":15497,"cached_input_tokens":5888,"cache_write_input_tokens":0,"output_tokens":150,"reasoning_output_tokens":44}}

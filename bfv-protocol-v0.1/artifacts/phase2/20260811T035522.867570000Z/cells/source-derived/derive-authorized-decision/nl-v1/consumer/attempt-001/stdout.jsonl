@@ -1,0 +1,4 @@
+{"type":"thread.started","thread_id":"019feefa-3f66-7081-b6ed-63042330e498"}
+{"type":"turn.started"}
+{"type":"item.completed","item":{"id":"item_0","type":"agent_message","text":"{\"records\":[{\"kind\":\"R1\",\"target\":\"CHECK:canary\",\"epistemic\":\"verified\",\"content\":\"fixture canary check passes\",\"evidence\":\"test:canary#17\",\"bounds\":\"fixture environment\"},{\"kind\":\"D1\",\"target\":\"DECISION:rollout\",\"content\":\"use a staged rollout\",\"authority_reference\":\"HUMAN-DECISION:release#2026-08-10\",\"bounds\":\"fixture release only\"}],\"task\":{\"choice\":\"staged-rollout\",\"route\":\"continue\",\"support_target\":\"DECISION:rollout\",\"support_epistemic\":null,\"support_evidence\":null,\"authority_reference\":\"HUMAN-DECISION:release#2026-08-10\"}}"}}
+{"type":"turn.completed","usage":{"input_tokens":15526,"cached_input_tokens":13056,"cache_write_input_tokens":0,"output_tokens":233,"reasoning_output_tokens":82}}

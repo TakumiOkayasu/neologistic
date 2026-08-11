@@ -1,0 +1,2 @@
+R1|CHECK:cache-regression|OV|fixture cache regression test passes|test:cache#88|fixture execution only
+R1|ASSERT:production-cause|IU|the conversion is the likely production cause|file:cache.go:41|production runtime not observed
