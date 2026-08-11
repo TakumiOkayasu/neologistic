@@ -58,6 +58,7 @@ type CostVector struct {
 	CLIInvocations           int    `json:"cli_invocations"`
 	RuntimeRetries           int    `json:"runtime_retries"`
 	InputTokens              Metric `json:"input_tokens"`
+	MaxInputTokensPerCall    Metric `json:"max_input_tokens_per_call"`
 	UncachedInputTokens      Metric `json:"uncached_input_tokens"`
 	CachedInputTokens        Metric `json:"cached_input_tokens"`
 	CacheWriteInputTokens    Metric `json:"cache_write_input_tokens"`
@@ -127,11 +128,55 @@ type NextDiscriminatingTest struct {
 	Purpose    string   `json:"purpose"`
 }
 
+// Selection is the observation-only Pareto-frontier diagnostic. Report.Selection
+// and selection.json retain this historical contract.
 type Selection struct {
 	Status                 string                  `json:"status"`
 	Winner                 *string                 `json:"winner"`
 	Rule                   string                  `json:"rule"`
 	NextDiscriminatingTest *NextDiscriminatingTest `json:"next_discriminating_test"`
+}
+
+type OperationalPricing struct {
+	PolicyVersion                     string `json:"policy_version"`
+	Model                             string `json:"model"`
+	VerifiedOn                        string `json:"verified_on"`
+	Source                            string `json:"source"`
+	UncachedInputNanoUSDPerToken      int64  `json:"uncached_input_nano_usd_per_token"`
+	CachedInputNanoUSDPerToken        int64  `json:"cached_input_nano_usd_per_token"`
+	CacheWriteInputNanoUSDPerToken    int64  `json:"cache_write_input_nano_usd_per_token"`
+	OutputNanoUSDPerToken             int64  `json:"output_nano_usd_per_token"`
+	StandardRateMaxInputTokensPerCall int64  `json:"standard_rate_max_input_tokens_per_call"`
+	ReasoningOutputCostTreatment      string `json:"reasoning_output_cost_treatment"`
+}
+
+type OperationalEvaluation struct {
+	Candidate                     string   `json:"candidate"`
+	CoverageComplete              bool     `json:"coverage_complete"`
+	HardFailures                  int      `json:"hard_failures"`
+	ConsumptionSemanticSuccesses  int      `json:"consumption_semantic_successes"`
+	ConsumptionSemanticFailures   int      `json:"consumption_semantic_failures"`
+	TransferSemanticSuccesses     int      `json:"transfer_semantic_successes"`
+	TransferSemanticFailures      int      `json:"transfer_semantic_failures"`
+	DownstreamTaskSuccesses       int      `json:"downstream_task_successes"`
+	DownstreamTaskFailures        int      `json:"downstream_task_failures"`
+	EstimatedPaidTokenCostNanoUSD *int64   `json:"estimated_paid_token_cost_nano_usd"`
+	EstimatedPaidTokenCostUSD     *float64 `json:"estimated_paid_token_cost_usd"`
+	InputOutputTokens             *int64   `json:"input_output_tokens"`
+	Eligible                      bool     `json:"eligible"`
+	Disposition                   string   `json:"disposition"`
+	Reason                        string   `json:"reason,omitempty"`
+}
+
+type OperationalSelection struct {
+	Status      string                  `json:"status"`
+	Winner      *string                 `json:"winner"`
+	Challenger  *string                 `json:"challenger"`
+	Rejected    []string                `json:"rejected"`
+	Rule        string                  `json:"rule"`
+	Reason      string                  `json:"reason,omitempty"`
+	Pricing     *OperationalPricing     `json:"pricing,omitempty"`
+	Evaluations []OperationalEvaluation `json:"evaluations,omitempty"`
 }
 
 type CohortSummary struct {
@@ -143,12 +188,14 @@ type CohortSummary struct {
 }
 
 type Report struct {
-	Coverage   CoverageReport     `json:"coverage"`
-	Trials     []TrialScore       `json:"trials"`
-	Candidates []CandidateSummary `json:"candidates"`
-	Cohorts    []CohortSummary    `json:"cohorts"`
-	Selection  Selection          `json:"selection"`
-	HardErrors []string           `json:"hard_errors,omitempty"`
+	Coverage             CoverageReport       `json:"coverage"`
+	Trials               []TrialScore         `json:"trials"`
+	Candidates           []CandidateSummary   `json:"candidates"`
+	Cohorts              []CohortSummary      `json:"cohorts"`
+	Selection            Selection            `json:"selection"`
+	ParetoSelection      Selection            `json:"pareto_selection"`
+	OperationalSelection OperationalSelection `json:"operational_selection"`
+	HardErrors           []string             `json:"hard_errors,omitempty"`
 }
 
 type recordChecks struct {
@@ -172,11 +219,18 @@ type recordChecks struct {
 type usageAccumulator struct {
 	Calls, Retries int
 	values         [5]int64
+	maxInputTokens int64
 	reported       [5]int
 	unreported     [5]int
+	invalidUsage   bool
+	invalidReason  string
 }
 
 func Score(fixtures []Fixture, observations []Observation) Report {
+	return ScoreWithOperationalPolicy(fixtures, observations, nil)
+}
+
+func ScoreWithOperationalPolicy(fixtures []Fixture, observations []Observation, policy *OperationalPricing) Report {
 	report := Report{}
 	fixtureByID := map[string]Fixture{}
 	for _, fixture := range fixtures {
@@ -267,6 +321,8 @@ func Score(fixtures []Fixture, observations []Observation) Report {
 		}
 	}
 	report.Selection = selectWinner(report.Candidates, report.Coverage, report.Trials)
+	report.ParetoSelection = report.Selection
+	report.OperationalSelection = selectOperationalWinner(report.Candidates, report.Coverage, policy)
 	return report
 }
 
@@ -812,24 +868,64 @@ func addTrial(summary *CandidateSummary, trial TrialScore) {
 
 func (usage *usageAccumulator) add(value CodexUsage) {
 	fields := []*int64{value.InputTokens, value.CachedInputTokens, value.CacheWriteInputTokens, value.OutputTokens, value.ReasoningOutputTokens}
+	for _, field := range fields {
+		if field != nil && *field < 0 {
+			usage.invalidate("a Codex CLI invocation reported a negative token counter")
+		}
+	}
+	if value.InputTokens != nil && value.CachedInputTokens != nil && value.CacheWriteInputTokens != nil &&
+		*value.InputTokens >= 0 && *value.CachedInputTokens >= 0 && *value.CacheWriteInputTokens >= 0 &&
+		(*value.CachedInputTokens > *value.InputTokens || *value.CacheWriteInputTokens > *value.InputTokens-*value.CachedInputTokens) {
+		usage.invalidate("a Codex CLI invocation reported cached_input_tokens + cache_write_input_tokens greater than input_tokens")
+	}
 	for index, field := range fields {
 		if field == nil {
 			usage.unreported[index]++
 		} else {
 			usage.reported[index]++
-			usage.values[index] += *field
+			if *field >= 0 {
+				if usage.values[index] > maxOperationalCostValue-*field {
+					usage.invalidate("token counters overflow int64 while aggregating Codex CLI invocations")
+				} else {
+					usage.values[index] += *field
+				}
+			}
+			if index == 0 && (usage.reported[index] == 1 || *field > usage.maxInputTokens) {
+				usage.maxInputTokens = *field
+			}
 		}
 	}
 }
 
 func (usage *usageAccumulator) merge(other usageAccumulator) {
+	hadReportedInput := usage.reported[0] > 0
+	if other.invalidUsage {
+		usage.invalidate(other.invalidReason)
+	}
 	usage.Calls += other.Calls
 	usage.Retries += other.Retries
 	for i := range usage.values {
-		usage.values[i] += other.values[i]
+		if other.values[i] < 0 {
+			usage.invalidate("scored trial contains a negative aggregate token counter")
+		} else if usage.values[i] > maxOperationalCostValue-other.values[i] {
+			usage.invalidate("token counters overflow int64 while merging scored trials")
+		} else {
+			usage.values[i] += other.values[i]
+		}
 		usage.reported[i] += other.reported[i]
 		usage.unreported[i] += other.unreported[i]
 	}
+	if other.reported[0] > 0 && (!hadReportedInput || other.maxInputTokens > usage.maxInputTokens) {
+		usage.maxInputTokens = other.maxInputTokens
+	}
+}
+
+func (usage *usageAccumulator) invalidate(reason string) {
+	if usage.invalidUsage {
+		return
+	}
+	usage.invalidUsage = true
+	usage.invalidReason = reason
 }
 
 func (usage usageAccumulator) report() CostVector {
@@ -846,18 +942,38 @@ func (usage usageAccumulator) report() CostVector {
 		if !metrics[i].Available {
 			metrics[i].Reason = "not reported for every executed Codex CLI invocation"
 		}
+		if usage.invalidUsage {
+			metrics[i].Available = false
+			metrics[i].Reason = usage.invalidReason
+		}
 	}
 	unavailable := func(reason string) Metric {
 		return Metric{Available: false, UnreportedCalls: usage.Calls, Reason: reason}
 	}
-	uncached := Metric{Available: false, Reason: "requires complete input_tokens and cached_input_tokens with cached input not exceeding total input", UnreportedCalls: usage.Calls}
-	if metrics[0].Available && metrics[1].Available && metrics[0].Value != nil && metrics[1].Value != nil && *metrics[0].Value >= *metrics[1].Value {
-		value := *metrics[0].Value - *metrics[1].Value
+	uncached := Metric{Available: false, Reason: "requires complete nonnegative input_tokens, cached_input_tokens, and cache_write_input_tokens whose sum does not exceed total input", UnreportedCalls: usage.Calls}
+	if metrics[0].Available && metrics[1].Available && metrics[2].Available &&
+		metrics[0].Value != nil && metrics[1].Value != nil && metrics[2].Value != nil &&
+		*metrics[0].Value >= 0 && *metrics[1].Value >= 0 && *metrics[2].Value >= 0 &&
+		*metrics[1].Value <= *metrics[0].Value && *metrics[2].Value <= *metrics[0].Value-*metrics[1].Value {
+		value := *metrics[0].Value - *metrics[1].Value - *metrics[2].Value
 		uncached = Metric{Available: true, Value: &value, ObservedTotal: value, ReportedCalls: usage.Calls}
+	}
+	maxInput := Metric{
+		Available:       metrics[0].Available,
+		ObservedTotal:   usage.values[0],
+		ReportedCalls:   usage.reported[0],
+		UnreportedCalls: usage.unreported[0],
+	}
+	if usage.reported[0] > 0 {
+		value := usage.maxInputTokens
+		maxInput.Value = &value
+	}
+	if !maxInput.Available {
+		maxInput.Reason = metrics[0].Reason
 	}
 	return CostVector{
 		CLIInvocations: usage.Calls, RuntimeRetries: usage.Retries,
-		InputTokens: metrics[0], UncachedInputTokens: uncached, CachedInputTokens: metrics[1], CacheWriteInputTokens: metrics[2], OutputTokens: metrics[3], ReasoningOutputTokens: metrics[4],
+		InputTokens: metrics[0], MaxInputTokensPerCall: maxInput, UncachedInputTokens: uncached, CachedInputTokens: metrics[1], CacheWriteInputTokens: metrics[2], OutputTokens: metrics[3], ReasoningOutputTokens: metrics[4],
 		InstructionTokens:        unavailable("Codex turn usage does not separate instruction tokens from case input tokens"),
 		TaskInputTokens:          unavailable("Codex turn usage does not separate case input tokens from instruction tokens"),
 		ProviderInternalRequests: unavailable("Codex CLI invocation count is observed; internal provider request count is not exposed"),
@@ -865,7 +981,7 @@ func (usage usageAccumulator) report() CostVector {
 	}
 }
 
-func selectWinner(summaries []CandidateSummary, coverage CoverageReport, trials []TrialScore) Selection {
+func selectParetoWinner(summaries []CandidateSummary, coverage CoverageReport, trials []TrialScore) Selection {
 	selection := Selection{
 		Status: "no_winner",
 		Rule:   "winner requires complete coverage, no hard failures, and one candidate that weakly dominates every other candidate on correctness and every observed cost dimension with at least one strict improvement",
@@ -904,6 +1020,210 @@ func selectWinner(summaries []CandidateSummary, coverage CoverageReport, trials 
 	}
 	selection.NextDiscriminatingTest = chooseNextDiscriminatingTest(coverage, trials, summaries)
 	return selection
+}
+
+// selectWinner preserves the former internal entry point for callers that
+// still treat the dominance result as a diagnostic.
+func selectWinner(summaries []CandidateSummary, coverage CoverageReport, trials []TrialScore) Selection {
+	return selectParetoWinner(summaries, coverage, trials)
+}
+
+const (
+	nanoUSDPerUSD            int64 = 1_000_000_000
+	maxOperationalCostValue  int64 = 1<<63 - 1
+	operationalSelectionRule       = "complete coverage; hard failures == 0; complete semantic consumption, transfer, and downstream correctness; lowest estimated paid-token cost; only on an exact estimated-cost tie, lowest input + output token count; an exact remaining tie leaves operational selection unresolved; unavailable cost remains unavailable and blocks selection"
+)
+
+type operationalRank struct {
+	candidate         string
+	costUnits         int64
+	inputOutputTokens int64
+}
+
+func validateOperationalPricing(pricing OperationalPricing, expectedModel string) error {
+	if strings.TrimSpace(pricing.PolicyVersion) == "" || strings.TrimSpace(pricing.Model) == "" ||
+		strings.TrimSpace(pricing.VerifiedOn) == "" || strings.TrimSpace(pricing.Source) == "" ||
+		strings.TrimSpace(pricing.ReasoningOutputCostTreatment) == "" {
+		return fmt.Errorf("policy_version, model, verified_on, source, and reasoning_output_cost_treatment are required")
+	}
+	if expectedModel != "" && pricing.Model != expectedModel {
+		return fmt.Errorf("model %q does not match run model %q", pricing.Model, expectedModel)
+	}
+	if pricing.UncachedInputNanoUSDPerToken <= 0 || pricing.CachedInputNanoUSDPerToken <= 0 ||
+		pricing.CacheWriteInputNanoUSDPerToken <= 0 || pricing.OutputNanoUSDPerToken <= 0 ||
+		pricing.StandardRateMaxInputTokensPerCall <= 0 {
+		return fmt.Errorf("all nanoUSD-per-token rates and standard_rate_max_input_tokens_per_call must be positive")
+	}
+	return nil
+}
+
+func selectOperationalWinner(summaries []CandidateSummary, coverage CoverageReport, policy *OperationalPricing) OperationalSelection {
+	selection := OperationalSelection{Status: "not_configured", Rule: operationalSelectionRule}
+	if policy == nil {
+		selection.Reason = "operational selection requires an explicit pricing policy"
+		return selection
+	}
+	if err := validateOperationalPricing(*policy, ""); err != nil {
+		selection.Status = "invalid_policy"
+		selection.Reason = err.Error()
+		return selection
+	}
+	pricing := *policy
+	selection.Status = "no_winner"
+	selection.Pricing = &pricing
+	ranked := make([]operationalRank, 0, len(summaries))
+	evaluationIndex := make(map[string]int, len(summaries))
+	costUnavailable := false
+
+	for _, summary := range summaries {
+		evaluation := OperationalEvaluation{
+			Candidate:                    summary.Candidate,
+			CoverageComplete:             coverage.Complete && summary.ExpectedCells > 0 && summary.ObservedCells == summary.ExpectedCells,
+			HardFailures:                 summary.HardFailures,
+			ConsumptionSemanticSuccesses: summary.ConsumptionSemanticSuccesses,
+			ConsumptionSemanticFailures:  summary.ConsumptionSemanticFailures,
+			TransferSemanticSuccesses:    summary.TransferSemanticSuccesses,
+			TransferSemanticFailures:     summary.TransferSemanticFailures,
+			DownstreamTaskSuccesses:      summary.DownstreamTaskSuccesses,
+			DownstreamTaskFailures:       summary.DownstreamTaskFailures,
+			Disposition:                  "blocked",
+		}
+		if nanoUSD, inputOutput, ok := estimatedPaidTokenCost(summary.Cost, pricing); ok {
+			costUSD := float64(nanoUSD) / float64(nanoUSDPerUSD)
+			evaluation.EstimatedPaidTokenCostUSD = &costUSD
+			evaluation.EstimatedPaidTokenCostNanoUSD = &nanoUSD
+			evaluation.InputOutputTokens = &inputOutput
+		}
+
+		switch {
+		case !evaluation.CoverageComplete:
+			evaluation.Reason = "complete candidate coverage is required"
+		case summary.HardFailures != 0:
+			evaluation.Disposition = "rejected"
+			evaluation.Reason = "hard failures must equal zero"
+			selection.Rejected = append(selection.Rejected, summary.Candidate)
+		case !completeOperationalCorrectness(summary):
+			evaluation.Disposition = "rejected"
+			evaluation.Reason = "complete semantic consumption and downstream correctness are required"
+			selection.Rejected = append(selection.Rejected, summary.Candidate)
+		default:
+			evaluation.Eligible = true
+			evaluation.Disposition = "eligible"
+			if evaluation.EstimatedPaidTokenCostNanoUSD == nil || evaluation.InputOutputTokens == nil {
+				evaluation.Reason = "estimated paid-token cost requires complete, consistent, nonnegative input/output metrics and every call within the pricing policy's standard-rate input limit"
+				costUnavailable = true
+			} else {
+				ranked = append(ranked, operationalRank{
+					candidate:         summary.Candidate,
+					costUnits:         *evaluation.EstimatedPaidTokenCostNanoUSD,
+					inputOutputTokens: *evaluation.InputOutputTokens,
+				})
+			}
+		}
+		evaluationIndex[summary.Candidate] = len(selection.Evaluations)
+		selection.Evaluations = append(selection.Evaluations, evaluation)
+	}
+
+	sort.Strings(selection.Rejected)
+	if !coverage.Complete {
+		selection.Reason = "operational selection is blocked because coverage is incomplete"
+		return selection
+	}
+	if costUnavailable {
+		selection.Reason = "operational selection is blocked because an eligible candidate lacks a complete estimated paid token cost"
+		return selection
+	}
+	if len(ranked) == 0 {
+		selection.Reason = "no candidate passed the hard-failure and semantic/downstream correctness gates"
+		return selection
+	}
+
+	sort.SliceStable(ranked, func(i, j int) bool {
+		if ranked[i].costUnits != ranked[j].costUnits {
+			return ranked[i].costUnits < ranked[j].costUnits
+		}
+		return ranked[i].inputOutputTokens < ranked[j].inputOutputTokens
+	})
+	if len(ranked) > 1 && sameOperationalRank(ranked[0], ranked[1]) {
+		selection.Reason = "the leading eligible candidates tie on estimated paid token cost and input + output token count"
+		return selection
+	}
+
+	winner := ranked[0].candidate
+	selection.Status = "winner"
+	selection.Winner = &winner
+	selection.Reason = winner + " has the lowest estimated paid token cost after the coverage, hard-failure, and semantic/downstream correctness gates"
+	selection.Evaluations[evaluationIndex[winner]].Disposition = "winner"
+	selection.Evaluations[evaluationIndex[winner]].Reason = "selected by the operational order"
+
+	if len(ranked) > 1 && (len(ranked) == 2 || !sameOperationalRank(ranked[1], ranked[2])) {
+		challenger := ranked[1].candidate
+		selection.Challenger = &challenger
+		selection.Evaluations[evaluationIndex[challenger]].Disposition = "challenger"
+		selection.Evaluations[evaluationIndex[challenger]].Reason = "next eligible candidate under the operational order"
+	}
+	return selection
+}
+
+func completeOperationalCorrectness(summary CandidateSummary) bool {
+	return summary.ConsumptionEligibleCells == summary.ObservedCells &&
+		summary.ConsumptionSemanticFailures == 0 &&
+		summary.ConsumptionSemanticSuccesses == summary.ConsumptionEligibleCells &&
+		summary.TransferSemanticFailures == 0 &&
+		summary.TransferSemanticSuccesses == summary.ObservedCells &&
+		summary.DownstreamTaskFailures == 0 &&
+		summary.DownstreamTaskSuccesses == summary.ObservedCells
+}
+
+func estimatedPaidTokenCost(cost CostVector, pricing OperationalPricing) (nanoUSD, inputOutputTokens int64, ok bool) {
+	if !cost.MaxInputTokensPerCall.Available || cost.MaxInputTokensPerCall.Value == nil ||
+		*cost.MaxInputTokensPerCall.Value < 0 || *cost.MaxInputTokensPerCall.Value > pricing.StandardRateMaxInputTokensPerCall {
+		return 0, 0, false
+	}
+	metrics := []struct {
+		metric Metric
+		rate   int64
+	}{
+		{metric: cost.UncachedInputTokens, rate: pricing.UncachedInputNanoUSDPerToken},
+		{metric: cost.CachedInputTokens, rate: pricing.CachedInputNanoUSDPerToken},
+		{metric: cost.CacheWriteInputTokens, rate: pricing.CacheWriteInputNanoUSDPerToken},
+		{metric: cost.OutputTokens, rate: pricing.OutputNanoUSDPerToken},
+	}
+	for _, item := range metrics {
+		if item.rate <= 0 || !item.metric.Available || item.metric.Value == nil || *item.metric.Value < 0 {
+			return 0, 0, false
+		}
+		value := *item.metric.Value
+		if value > maxOperationalCostValue/item.rate {
+			return 0, 0, false
+		}
+		term := value * item.rate
+		if nanoUSD > maxOperationalCostValue-term {
+			return 0, 0, false
+		}
+		nanoUSD += term
+	}
+	if !cost.InputTokens.Available || cost.InputTokens.Value == nil || *cost.InputTokens.Value < 0 ||
+		!cost.OutputTokens.Available || cost.OutputTokens.Value == nil || *cost.OutputTokens.Value < 0 ||
+		*cost.InputTokens.Value > maxOperationalCostValue-*cost.OutputTokens.Value {
+		return 0, 0, false
+	}
+	uncached := *cost.UncachedInputTokens.Value
+	cached := *cost.CachedInputTokens.Value
+	cacheWrite := *cost.CacheWriteInputTokens.Value
+	if uncached > maxOperationalCostValue-cached {
+		return 0, 0, false
+	}
+	accountedInput := uncached + cached
+	if accountedInput > maxOperationalCostValue-cacheWrite || accountedInput+cacheWrite != *cost.InputTokens.Value {
+		return 0, 0, false
+	}
+	inputOutputTokens = *cost.InputTokens.Value + *cost.OutputTokens.Value
+	return nanoUSD, inputOutputTokens, true
+}
+
+func sameOperationalRank(left, right operationalRank) bool {
+	return left.costUnits == right.costUnits && left.inputOutputTokens == right.inputOutputTokens
 }
 
 func chooseNextDiscriminatingTest(coverage CoverageReport, trials []TrialScore, summaries []CandidateSummary) *NextDiscriminatingTest {

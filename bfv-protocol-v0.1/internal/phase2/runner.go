@@ -18,13 +18,14 @@ import (
 )
 
 type PilotConfig struct {
-	SchemaVersion           int      `json:"schema_version"`
-	Model                   string   `json:"model"`
-	ReasoningEffort         string   `json:"reasoning_effort"`
-	Sandbox                 string   `json:"sandbox"`
-	ApprovalPolicy          string   `json:"approval_policy"`
-	AutomaticRuntimeRetries int      `json:"automatic_runtime_retries"`
-	Candidates              []string `json:"candidates"`
+	SchemaVersion           int                 `json:"schema_version"`
+	Model                   string              `json:"model"`
+	ReasoningEffort         string              `json:"reasoning_effort"`
+	Sandbox                 string              `json:"sandbox"`
+	ApprovalPolicy          string              `json:"approval_policy"`
+	AutomaticRuntimeRetries int                 `json:"automatic_runtime_retries"`
+	Candidates              []string            `json:"candidates"`
+	OperationalPricing      *OperationalPricing `json:"operational_pricing,omitempty"`
 }
 
 type RunOptions struct {
@@ -85,6 +86,11 @@ func LoadPilotConfig(path string) (PilotConfig, error) {
 	for i := range Candidates {
 		if config.Candidates[i] != Candidates[i] {
 			return PilotConfig{}, fmt.Errorf("config candidates must be exactly %v", Candidates)
+		}
+	}
+	if config.OperationalPricing != nil {
+		if err := validateOperationalPricing(*config.OperationalPricing, config.Model); err != nil {
+			return PilotConfig{}, fmt.Errorf("operational_pricing: %w", err)
 		}
 	}
 	return config, nil
@@ -195,7 +201,7 @@ func RunPilot(ctx context.Context, options RunOptions) (string, Report, error) {
 	if err := writeJSON(filepath.Join(runDir, "execution-order.json"), executionOrder); err != nil {
 		return runDir, Report{}, err
 	}
-	report := Score(fixtures, observations)
+	report := ScoreWithOperationalPolicy(fixtures, observations, config.OperationalPricing)
 	if err := WriteReportArtifacts(runDir, report, nil); err != nil {
 		return runDir, report, err
 	}
@@ -440,6 +446,12 @@ func finalStageSucceeded(stage StageObservation) bool {
 }
 
 func WriteReportArtifacts(root string, report Report, explicit []DefectRecord) error {
+	if report.ParetoSelection.Status == "" && report.ParetoSelection.Rule == "" {
+		report.ParetoSelection = report.Selection
+	}
+	// selection.json and score.json.selection are the legacy Pareto aliases.
+	// Normalize them here so callers cannot accidentally publish divergent values.
+	report.Selection = report.ParetoSelection
 	for _, defect := range explicit {
 		if defect.Candidate == "" {
 			continue
@@ -459,7 +471,13 @@ func WriteReportArtifacts(root string, report Report, explicit []DefectRecord) e
 	if err := writeJSON(filepath.Join(root, "candidate-summaries.json"), report.Candidates); err != nil {
 		return err
 	}
-	if err := writeJSON(filepath.Join(root, "selection.json"), report.Selection); err != nil {
+	if err := writeJSON(filepath.Join(root, "selection.json"), report.ParetoSelection); err != nil {
+		return err
+	}
+	if err := writeJSON(filepath.Join(root, "operational-selection.json"), report.OperationalSelection); err != nil {
+		return err
+	}
+	if err := writeJSON(filepath.Join(root, "pareto-selection.json"), report.ParetoSelection); err != nil {
 		return err
 	}
 	defects := append([]DefectRecord(nil), explicit...)

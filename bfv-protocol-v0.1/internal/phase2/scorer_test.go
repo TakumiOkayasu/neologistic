@@ -2,6 +2,8 @@ package phase2
 
 import (
 	"os"
+	"reflect"
+	"strings"
 	"testing"
 )
 
@@ -25,8 +27,14 @@ func TestSyntheticPerfectCoverageSeparatesIdentityCopyAndDerivation(t *testing.T
 	if pipe.ConsumptionEligibleCells != len(fixtures) || pipe.ConsumptionSemanticFailures != 0 {
 		t.Fatalf("consumption denominator = %+v", pipe)
 	}
+	if report.ParetoSelection.Winner == nil || *report.ParetoSelection.Winner != CandidateDirect {
+		t.Fatalf("pareto winner = %+v", report.ParetoSelection)
+	}
 	if report.Selection.Winner == nil || *report.Selection.Winner != CandidateDirect {
-		t.Fatalf("winner = %+v", report.Selection)
+		t.Fatalf("legacy pareto selection = %+v", report.Selection)
+	}
+	if report.OperationalSelection.Status != "not_configured" || report.OperationalSelection.Winner != nil {
+		t.Fatalf("unconfigured operational selection = %+v", report.OperationalSelection)
 	}
 	if direct.Cost.MonetaryCost.Available || direct.Cost.ProviderInternalRequests.Available {
 		t.Fatal("unavailable monetary/internal request dimensions became available")
@@ -140,11 +148,11 @@ func TestSyntheticMissingCellIsCoverageHardError(t *testing.T) {
 	fixtures := testFixtures(t)
 	observations := perfectObservations(t, fixtures)
 	report := Score(fixtures, observations[:len(observations)-1])
-	if !report.Coverage.HardError || report.ExitCode() != 2 || report.Selection.Winner != nil {
+	if !report.Coverage.HardError || report.ExitCode() != 2 || report.Selection.Winner != nil || report.OperationalSelection.Winner != nil || report.ParetoSelection.Winner != nil {
 		t.Fatalf("report = %+v", report)
 	}
-	if report.Selection.NextDiscriminatingTest == nil {
-		t.Fatalf("next test = %+v", report.Selection)
+	if report.ParetoSelection.NextDiscriminatingTest == nil {
+		t.Fatalf("pareto next test = %+v", report.ParetoSelection)
 	}
 }
 
@@ -179,8 +187,9 @@ func TestNextTestTargetsSafeCostVectorCrossing(t *testing.T) {
 		{Candidate: CandidatePipe, HardFailures: 0, Cost: cost(10, 20, 10, 20)},
 		{Candidate: CandidateJSON, HardFailures: 0, Cost: cost(20, 10, 9, 10)},
 	}
+	input := int64(30)
 	value := int64(10)
-	usage := CodexUsage{InputTokens: &value, CachedInputTokens: &value, CacheWriteInputTokens: &value, OutputTokens: &value, ReasoningOutputTokens: &value}
+	usage := CodexUsage{InputTokens: &input, CachedInputTokens: &value, CacheWriteInputTokens: &value, OutputTokens: &value, ReasoningOutputTokens: &value}
 	trials := []TrialScore{
 		{CaseID: "derive", Cohort: "source-derived", Candidate: CandidatePipe, cost: usageAccumulator{}},
 		{CaseID: "derive", Cohort: "source-derived", Candidate: CandidateJSON, cost: usageAccumulator{}},
@@ -190,6 +199,249 @@ func TestNextTestTargetsSafeCostVectorCrossing(t *testing.T) {
 	next := chooseNextDiscriminatingTest(CoverageReport{Complete: true}, trials, summaries)
 	if next == nil || next.Trigger != "observed-safe-cost-vector-crossing" || len(next.Candidates) != 2 || next.Candidates[0] != CandidatePipe || next.Candidates[1] != CandidateJSON {
 		t.Fatalf("next test = %+v", next)
+	}
+}
+
+func TestCurrentPhase2MetricsSelectJSONOperationallyAndKeepParetoDiagnostic(t *testing.T) {
+	summaries := []CandidateSummary{
+		currentOperationalSummary(CandidateDirect, 2, 3, 30_761, 46_848, 1_017, 372, 5),
+		currentOperationalSummary(CandidateNL, 2, 3, 78_583, 76_288, 1_348, 308, 10),
+		currentOperationalSummary(CandidatePipe, 0, 5, 64_421, 91_648, 1_148, 269, 10),
+		currentOperationalSummary(CandidateJSON, 0, 5, 41_010, 113_152, 1_356, 326, 10),
+	}
+	coverage := CoverageReport{Complete: true}
+
+	pareto := selectParetoWinner(summaries, coverage, nil)
+	if pareto.Status != "no_winner" || pareto.Winner != nil {
+		t.Fatalf("pareto selection = %+v", pareto)
+	}
+	operational := selectOperationalWinner(summaries, coverage, operationalPricingPointer())
+	if operational.Status != "winner" || operational.Winner == nil || *operational.Winner != CandidateJSON {
+		t.Fatalf("operational selection = %+v", operational)
+	}
+	if operational.Challenger == nil || *operational.Challenger != CandidatePipe {
+		t.Fatalf("challenger = %+v", operational.Challenger)
+	}
+	if !reflect.DeepEqual(operational.Rejected, []string{CandidateDirect, CandidateNL}) {
+		t.Fatalf("rejected = %v", operational.Rejected)
+	}
+	if operational.Pricing == nil || operational.Pricing.Model != "gpt-5.6-sol" || operational.Pricing.UncachedInputNanoUSDPerToken != 5_000 || operational.Pricing.CachedInputNanoUSDPerToken != 500 || operational.Pricing.CacheWriteInputNanoUSDPerToken != 6_250 || operational.Pricing.OutputNanoUSDPerToken != 30_000 || operational.Pricing.StandardRateMaxInputTokensPerCall != 272_000 || operational.Pricing.Source != "https://developers.openai.com/api/docs/models/gpt-5.6-sol" {
+		t.Fatalf("pricing provenance = %+v", operational.Pricing)
+	}
+
+	jsonEvaluation := operationalEvaluation(t, operational, CandidateJSON)
+	if jsonEvaluation.EstimatedPaidTokenCostNanoUSD == nil || *jsonEvaluation.EstimatedPaidTokenCostNanoUSD != 302_306_000 {
+		t.Fatalf("json estimated cost = %+v", jsonEvaluation.EstimatedPaidTokenCostNanoUSD)
+	}
+	if jsonEvaluation.EstimatedPaidTokenCostUSD == nil || *jsonEvaluation.EstimatedPaidTokenCostUSD != 0.302306 {
+		t.Fatalf("json estimated USD = %+v", jsonEvaluation.EstimatedPaidTokenCostUSD)
+	}
+	if jsonEvaluation.InputOutputTokens == nil || *jsonEvaluation.InputOutputTokens != 155_518 {
+		t.Fatalf("json input + output = %+v", jsonEvaluation.InputOutputTokens)
+	}
+	pipeEvaluation := operationalEvaluation(t, operational, CandidatePipe)
+	if pipeEvaluation.EstimatedPaidTokenCostNanoUSD == nil || *pipeEvaluation.EstimatedPaidTokenCostNanoUSD != 402_369_000 {
+		t.Fatalf("pipe estimated cost = %+v", pipeEvaluation.EstimatedPaidTokenCostNanoUSD)
+	}
+	if pipeEvaluation.EstimatedPaidTokenCostUSD == nil || *pipeEvaluation.EstimatedPaidTokenCostUSD != 0.402369 {
+		t.Fatalf("pipe estimated USD = %+v", pipeEvaluation.EstimatedPaidTokenCostUSD)
+	}
+	if pipeEvaluation.InputOutputTokens == nil || *pipeEvaluation.InputOutputTokens != 157_217 {
+		t.Fatalf("pipe input + output = %+v", pipeEvaluation.InputOutputTokens)
+	}
+}
+
+func TestOperationalSelectionUsesTokenCountOnlyWhenEstimatedCostTies(t *testing.T) {
+	tests := []struct {
+		name     string
+		pipeCost CostVector
+		jsonCost CostVector
+		winner   string
+	}{
+		{
+			name:     "paid cost precedes raw token count",
+			pipeCost: operationalTestCost(0, 100, 0, 10),
+			jsonCost: operationalTestCost(11, 0, 0, 10),
+			winner:   CandidatePipe,
+		},
+		{
+			name:     "raw token count breaks exact paid cost tie",
+			pipeCost: operationalTestCost(0, 10, 0, 10),
+			jsonCost: operationalTestCost(1, 0, 0, 10),
+			winner:   CandidateJSON,
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			summaries := []CandidateSummary{
+				perfectOperationalSummary(CandidatePipe, test.pipeCost),
+				perfectOperationalSummary(CandidateJSON, test.jsonCost),
+			}
+			selection := selectOperationalWinner(summaries, CoverageReport{Complete: true}, operationalPricingPointer())
+			if selection.Winner == nil || *selection.Winner != test.winner {
+				t.Fatalf("selection = %+v", selection)
+			}
+		})
+	}
+}
+
+func TestOperationalSelectionAppliesCorrectnessBeforeCost(t *testing.T) {
+	tests := []struct {
+		name   string
+		mutate func(*CandidateSummary)
+	}{
+		{
+			name: "semantic correctness",
+			mutate: func(summary *CandidateSummary) {
+				summary.ConsumptionSemanticSuccesses = 4
+				summary.ConsumptionSemanticFailures = 1
+			},
+		},
+		{
+			name: "downstream correctness",
+			mutate: func(summary *CandidateSummary) {
+				summary.DownstreamTaskSuccesses = 4
+				summary.DownstreamTaskFailures = 1
+			},
+		},
+		{
+			name: "transfer correctness",
+			mutate: func(summary *CandidateSummary) {
+				summary.TransferSemanticSuccesses = 4
+				summary.TransferSemanticFailures = 1
+			},
+		},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			cheaperButIncorrect := perfectOperationalSummary(CandidatePipe, operationalTestCost(0, 0, 0, 10))
+			test.mutate(&cheaperButIncorrect)
+			correct := perfectOperationalSummary(CandidateJSON, operationalTestCost(10, 0, 0, 10))
+			selection := selectOperationalWinner([]CandidateSummary{cheaperButIncorrect, correct}, CoverageReport{Complete: true}, operationalPricingPointer())
+			if selection.Winner == nil || *selection.Winner != CandidateJSON {
+				t.Fatalf("selection = %+v", selection)
+			}
+			if !reflect.DeepEqual(selection.Rejected, []string{CandidatePipe}) {
+				t.Fatalf("rejected = %v", selection.Rejected)
+			}
+		})
+	}
+}
+
+func TestOperationalSelectionDoesNotInventCostOrFinalTieBreaker(t *testing.T) {
+	pipe := perfectOperationalSummary(CandidatePipe, operationalTestCost(1, 2, 3, 10))
+	json := perfectOperationalSummary(CandidateJSON, operationalTestCost(1, 2, 3, 10))
+	selection := selectOperationalWinner([]CandidateSummary{pipe, json}, CoverageReport{Complete: true}, operationalPricingPointer())
+	if selection.Winner != nil || selection.Status != "no_winner" {
+		t.Fatalf("exact tie selection = %+v", selection)
+	}
+
+	pipe.Cost.UncachedInputTokens = Metric{Available: false, Reason: "unreported"}
+	selection = selectOperationalWinner([]CandidateSummary{pipe, json}, CoverageReport{Complete: true}, operationalPricingPointer())
+	if selection.Winner != nil || selection.Status != "no_winner" {
+		t.Fatalf("unavailable cost selection = %+v", selection)
+	}
+	pipeEvaluation := operationalEvaluation(t, selection, CandidatePipe)
+	if pipeEvaluation.EstimatedPaidTokenCostUSD != nil {
+		t.Fatalf("unavailable cost became zero: %+v", pipeEvaluation)
+	}
+}
+
+func TestOperationalCostPricesCacheWriteWithoutDoubleCounting(t *testing.T) {
+	input := int64(10)
+	cached := int64(2)
+	cacheWrite := int64(3)
+	output := int64(0)
+	reasoning := int64(0)
+	usage := usageAccumulator{Calls: 1}
+	usage.add(CodexUsage{
+		InputTokens:           &input,
+		CachedInputTokens:     &cached,
+		CacheWriteInputTokens: &cacheWrite,
+		OutputTokens:          &output,
+		ReasoningOutputTokens: &reasoning,
+	})
+	cost := usage.report()
+	if !cost.UncachedInputTokens.Available || cost.UncachedInputTokens.Value == nil || *cost.UncachedInputTokens.Value != 5 {
+		t.Fatalf("uncached decomposition = %+v", cost.UncachedInputTokens)
+	}
+	nanoUSD, inputOutput, ok := estimatedPaidTokenCost(cost, *operationalPricingPointer())
+	if !ok || nanoUSD != 44_750 || inputOutput != 10 {
+		t.Fatalf("estimated cost = nanoUSD:%d input+output:%d ok:%v", nanoUSD, inputOutput, ok)
+	}
+	inconsistent := cost
+	inconsistent.InputTokens = availableMetric(11, 1)
+	if _, _, ok := estimatedPaidTokenCost(inconsistent, *operationalPricingPointer()); ok {
+		t.Fatal("inconsistent input decomposition was priced")
+	}
+
+	pipeCost := operationalTestCost(0, 0, 0, 1)
+	pipeCost.InputTokens = availableMetric(1, 1)
+	pipeCost.CacheWriteInputTokens = availableMetric(1, 1)
+	jsonCost := operationalTestCost(1, 0, 0, 1)
+	selection := selectOperationalWinner([]CandidateSummary{
+		perfectOperationalSummary(CandidatePipe, pipeCost),
+		perfectOperationalSummary(CandidateJSON, jsonCost),
+	}, CoverageReport{Complete: true}, operationalPricingPointer())
+	if selection.Winner == nil || *selection.Winner != CandidateJSON {
+		t.Fatalf("cache-write pricing selection = %+v", selection)
+	}
+}
+
+func TestOperationalSelectionBlocksWhenStandardRateDoesNotApply(t *testing.T) {
+	pipeCost := operationalTestCost(1, 0, 0, 1)
+	pipeCost.MaxInputTokensPerCall = availableMetric(272_001, 1)
+	jsonCost := operationalTestCost(1, 0, 0, 1)
+	selection := selectOperationalWinner([]CandidateSummary{
+		perfectOperationalSummary(CandidatePipe, pipeCost),
+		perfectOperationalSummary(CandidateJSON, jsonCost),
+	}, CoverageReport{Complete: true}, operationalPricingPointer())
+	if selection.Status != "no_winner" || selection.Winner != nil || !strings.Contains(selection.Reason, "lacks a complete estimated paid token cost") {
+		t.Fatalf("long-context selection = %+v", selection)
+	}
+	pipeEvaluation := operationalEvaluation(t, selection, CandidatePipe)
+	if pipeEvaluation.EstimatedPaidTokenCostNanoUSD != nil {
+		t.Fatalf("standard rates applied above their input limit: %+v", pipeEvaluation)
+	}
+}
+
+func TestInvalidPerCallUsageCannotBeHiddenByAggregation(t *testing.T) {
+	addUsage := func(usage *usageAccumulator, input, cached, cacheWrite int64) {
+		zero := int64(0)
+		usage.add(CodexUsage{
+			InputTokens:           &input,
+			CachedInputTokens:     &cached,
+			CacheWriteInputTokens: &cacheWrite,
+			OutputTokens:          &zero,
+			ReasoningOutputTokens: &zero,
+		})
+	}
+
+	invalidDecomposition := usageAccumulator{Calls: 2}
+	addUsage(&invalidDecomposition, 5, 10, 0)
+	addUsage(&invalidDecomposition, 15, 0, 0)
+	cost := invalidDecomposition.report()
+	if cost.InputTokens.Available || !strings.Contains(cost.InputTokens.Reason, "greater than input_tokens") {
+		t.Fatalf("invalid per-call decomposition was aggregated: %+v", cost.InputTokens)
+	}
+	if _, _, ok := estimatedPaidTokenCost(cost, *operationalPricingPointer()); ok {
+		t.Fatal("invalid per-call decomposition was priced")
+	}
+
+	negativeCancellation := usageAccumulator{Calls: 2}
+	addUsage(&negativeCancellation, -1, 0, 0)
+	addUsage(&negativeCancellation, 2, 0, 0)
+	if metric := negativeCancellation.report().InputTokens; metric.Available || !strings.Contains(metric.Reason, "negative") {
+		t.Fatalf("negative counter was hidden by aggregation: %+v", metric)
+	}
+
+	left := usageAccumulator{Calls: 1}
+	right := usageAccumulator{Calls: 1}
+	addUsage(&left, maxOperationalCostValue, 0, 0)
+	addUsage(&right, 1, 0, 0)
+	left.merge(right)
+	if metric := left.report().InputTokens; metric.Available || !strings.Contains(metric.Reason, "overflow") {
+		t.Fatalf("merge overflow was not blocked: %+v", metric)
 	}
 }
 
@@ -209,8 +461,9 @@ func testFixtures(t *testing.T) []Fixture {
 
 func perfectObservations(t *testing.T, fixtures []Fixture) []Observation {
 	t.Helper()
+	input := int64(3)
 	value := int64(1)
-	usage := CodexUsage{InputTokens: &value, CachedInputTokens: &value, CacheWriteInputTokens: &value, OutputTokens: &value, ReasoningOutputTokens: &value}
+	usage := CodexUsage{InputTokens: &input, CachedInputTokens: &value, CacheWriteInputTokens: &value, OutputTokens: &value, ReasoningOutputTokens: &value}
 	var observations []Observation
 	for _, fixture := range fixtures {
 		consumer, err := EncodeConsumer(fixture.ExpectedRecords, fixture.TaskOracle)
@@ -306,4 +559,74 @@ func cloneMap(source map[string]any) map[string]any {
 		cloned[key] = value
 	}
 	return cloned
+}
+
+func currentOperationalSummary(candidate string, hardFailures, semanticSuccesses int, uncached, cached, output, reasoning int64, calls int) CandidateSummary {
+	summary := perfectOperationalSummary(candidate, operationalTestCost(uncached, cached, output, calls))
+	summary.HardFailures = hardFailures
+	summary.ConsumptionSemanticSuccesses = semanticSuccesses
+	summary.ConsumptionSemanticFailures = summary.ConsumptionEligibleCells - semanticSuccesses
+	summary.TransferSemanticSuccesses = semanticSuccesses
+	summary.TransferSemanticFailures = summary.ObservedCells - semanticSuccesses
+	reasoningMetric := availableMetric(reasoning, calls)
+	summary.Cost.ReasoningOutputTokens = reasoningMetric
+	return summary
+}
+
+func perfectOperationalSummary(candidate string, cost CostVector) CandidateSummary {
+	return CandidateSummary{
+		Candidate:                    candidate,
+		ExpectedCells:                5,
+		ObservedCells:                5,
+		ConsumptionEligibleCells:     5,
+		ConsumptionSemanticSuccesses: 5,
+		TransferSemanticSuccesses:    5,
+		DownstreamTaskSuccesses:      5,
+		Cost:                         cost,
+	}
+}
+
+func operationalTestCost(uncached, cached, output int64, calls int) CostVector {
+	input := uncached + cached
+	zero := int64(0)
+	return CostVector{
+		CLIInvocations:        calls,
+		InputTokens:           availableMetric(input, calls),
+		MaxInputTokensPerCall: availableMetric(input, calls),
+		UncachedInputTokens:   availableMetric(uncached, calls),
+		CachedInputTokens:     availableMetric(cached, calls),
+		CacheWriteInputTokens: availableMetric(zero, calls),
+		OutputTokens:          availableMetric(output, calls),
+		ReasoningOutputTokens: availableMetric(zero, calls),
+	}
+}
+
+func availableMetric(value int64, calls int) Metric {
+	return Metric{Available: true, Value: &value, ObservedTotal: value, ReportedCalls: calls}
+}
+
+func operationalPricingPointer() *OperationalPricing {
+	return &OperationalPricing{
+		PolicyVersion:                     "gpt-5.6-sol-2026-08-11",
+		Model:                             "gpt-5.6-sol",
+		VerifiedOn:                        "2026-08-11",
+		Source:                            "https://developers.openai.com/api/docs/models/gpt-5.6-sol",
+		UncachedInputNanoUSDPerToken:      5_000,
+		CachedInputNanoUSDPerToken:        500,
+		CacheWriteInputNanoUSDPerToken:    6_250,
+		OutputNanoUSDPerToken:             30_000,
+		StandardRateMaxInputTokensPerCall: 272_000,
+		ReasoningOutputCostTreatment:      "reasoning output is already included in output",
+	}
+}
+
+func operationalEvaluation(t *testing.T, selection OperationalSelection, candidate string) OperationalEvaluation {
+	t.Helper()
+	for _, evaluation := range selection.Evaluations {
+		if evaluation.Candidate == candidate {
+			return evaluation
+		}
+	}
+	t.Fatalf("operational evaluation missing for %s", candidate)
+	return OperationalEvaluation{}
 }

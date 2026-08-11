@@ -9,7 +9,9 @@ Vendor-neutral reference package for a bounded falsification and verification ke
 - Semantic evaluator: implemented.
 - Deterministic and fuzz checks: available.
 - Real-model pipe pilot: complete.
-- Phase 2 matched transfer pilot: complete; no overall winner, with `pipe-v1` and `json-v1` held on the safe cost frontier.
+- Phase 2 matched transfer pilot: complete.
+- Operational transfer default: `json-v1`; challenger: `pipe-v1`; rejected: `direct-v1` and `nl-v1`.
+- Frozen Pareto diagnostic: no winner; the canonical artifact and its legacy selection remain byte-unchanged.
 
 ## Canonical records
 
@@ -36,6 +38,7 @@ go run ./cmd/bfvctl eval -cases fixtures/cases.jsonl -responses fixtures/respons
 - `docs/EVALUATION.md`: real-model evaluation contract.
 - `docs/REAL_MODEL_HANDOFF.md`: external runner boundary.
 - `docs/PHASE2_RESULTS.md`: matched candidate metrics, defect separation, and selection result.
+- `docs/PHASE2_DECISION.md`: ratified operational default, pricing policy, and compatibility boundary.
 - `phase2/`: reproducible matched runner, fixtures, prompts, and scorer.
 - `prompts/protocol-instruction.md`: model-facing wire instruction.
 - `fixtures/`: semantic cases and sample responses.

@@ -20,6 +20,32 @@ func TestLoadPilotConfigRejectsUnknownFields(t *testing.T) {
 	}
 }
 
+func TestLoadPilotConfigAllowsLegacyConfigWithoutOperationalPricing(t *testing.T) {
+	path := filepath.Join(t.TempDir(), "config.json")
+	raw := `{"schema_version":1,"model":"m","reasoning_effort":"high","sandbox":"read-only","approval_policy":"never","automatic_runtime_retries":0,"candidates":["direct-v1","nl-v1","pipe-v1","json-v1"]}`
+	if err := os.WriteFile(path, []byte(raw), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	config, err := LoadPilotConfig(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if config.OperationalPricing != nil {
+		t.Fatalf("legacy config unexpectedly gained pricing: %+v", config.OperationalPricing)
+	}
+}
+
+func TestCurrentPilotConfigHasValidatedOperationalPricing(t *testing.T) {
+	config, err := LoadPilotConfig("../../phase2/config.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	pricing := config.OperationalPricing
+	if pricing == nil || pricing.Model != config.Model || pricing.UncachedInputNanoUSDPerToken != 5_000 || pricing.CachedInputNanoUSDPerToken != 500 || pricing.CacheWriteInputNanoUSDPerToken != 6_250 || pricing.OutputNanoUSDPerToken != 30_000 || pricing.StandardRateMaxInputTokensPerCall != 272_000 {
+		t.Fatalf("operational pricing = %+v", pricing)
+	}
+}
+
 func TestProducerPromptUsesExistingPipeAuthorityAndDoesNotLeakOracle(t *testing.T) {
 	root, err := filepath.Abs("../..")
 	if err != nil {
@@ -149,5 +175,69 @@ func TestExplicitDefectAttributionSuppressesDuplicateUnclassified(t *testing.T) 
 	}
 	if summaries[0].Defects["model"] != 1 {
 		t.Fatalf("explicit defect was not aggregated: %+v", summaries[0].Defects)
+	}
+}
+
+func TestWriteReportArtifactsSeparatesOperationalAndParetoSelections(t *testing.T) {
+	root := t.TempDir()
+	jsonWinner := CandidateJSON
+	pipeChallenger := CandidatePipe
+	operational := OperationalSelection{
+		Status:     "winner",
+		Winner:     &jsonWinner,
+		Challenger: &pipeChallenger,
+		Rejected:   []string{CandidateDirect, CandidateNL},
+		Rule:       operationalSelectionRule,
+	}
+	pareto := Selection{Status: "no_winner", Rule: "pareto diagnostic"}
+	report := Report{
+		Selection:            Selection{Status: "winner", Winner: &jsonWinner, Rule: "stale non-Pareto value"},
+		OperationalSelection: operational,
+		ParetoSelection:      pareto,
+	}
+	if err := WriteReportArtifacts(root, report, nil); err != nil {
+		t.Fatal(err)
+	}
+
+	selectionData, err := os.ReadFile(filepath.Join(root, "selection.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	paretoData, err := os.ReadFile(filepath.Join(root, "pareto-selection.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if string(selectionData) != string(paretoData) {
+		t.Fatalf("selection.json is not the Pareto compatibility output\nselection: %s\npareto: %s", selectionData, paretoData)
+	}
+
+	operationalData, err := os.ReadFile(filepath.Join(root, "operational-selection.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var writtenOperational OperationalSelection
+	if err := json.Unmarshal(operationalData, &writtenOperational); err != nil {
+		t.Fatal(err)
+	}
+	if writtenOperational.Winner == nil || *writtenOperational.Winner != CandidateJSON {
+		t.Fatalf("operational selection = %+v", writtenOperational)
+	}
+
+	scoreData, err := os.ReadFile(filepath.Join(root, "score.json"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	var written Report
+	if err := json.Unmarshal(scoreData, &written); err != nil {
+		t.Fatal(err)
+	}
+	if written.Selection.Status != "no_winner" || written.Selection.Winner != nil {
+		t.Fatalf("score legacy pareto alias = %+v", written.Selection)
+	}
+	if written.OperationalSelection.Winner == nil || *written.OperationalSelection.Winner != CandidateJSON {
+		t.Fatalf("score operational selection = %+v", written.OperationalSelection)
+	}
+	if written.ParetoSelection.Status != "no_winner" || written.ParetoSelection.Winner != nil {
+		t.Fatalf("score pareto selection = %+v", written.ParetoSelection)
 	}
 }

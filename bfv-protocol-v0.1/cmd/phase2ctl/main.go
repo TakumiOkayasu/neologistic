@@ -82,6 +82,7 @@ func validateCommand(args []string) (int, error) {
 		"candidates": config.Candidates, "planned_cells": len(fixtures) * len(config.Candidates),
 		"planned_initial_cli_invocations": len(fixtures) * 7,
 		"automatic_runtime_retries":       config.AutomaticRuntimeRetries,
+		"operational_pricing_configured":  config.OperationalPricing != nil,
 		"claim_boundary":                  "semantic-class coverage, not a population reliability estimate",
 	})
 }
@@ -89,6 +90,7 @@ func validateCommand(args []string) (int, error) {
 func scoreCommand(args []string) (int, error) {
 	flags := flag.NewFlagSet("score", flag.ContinueOnError)
 	fixturesPath := flags.String("fixtures", "phase2/fixtures/cases.jsonl", "fixture JSONL")
+	configPath := flags.String("config", "phase2/config.json", "fixed run config")
 	observationsPath := flags.String("observations", "", "observation JSONL")
 	outputPath := flags.String("out", "", "output directory")
 	defectsPath := flags.String("defects", "", "optional evidence-backed defect JSONL")
@@ -99,6 +101,10 @@ func scoreCommand(args []string) (int, error) {
 		return 2, fmt.Errorf("score requires -observations and -out")
 	}
 	fixtures, err := readFixtures(*fixturesPath)
+	if err != nil {
+		return 1, err
+	}
+	config, err := phase2.LoadPilotConfig(*configPath)
 	if err != nil {
 		return 1, err
 	}
@@ -114,7 +120,7 @@ func scoreCommand(args []string) (int, error) {
 	if closeErr != nil {
 		return 1, closeErr
 	}
-	report := phase2.Score(fixtures, observations)
+	report := phase2.ScoreWithOperationalPolicy(fixtures, observations, config.OperationalPricing)
 	defects, err := readDefects(*defectsPath)
 	if err != nil {
 		return 1, err
@@ -125,7 +131,9 @@ func scoreCommand(args []string) (int, error) {
 	if err := phase2.WriteSHA256SUMS(*outputPath); err != nil {
 		return 1, err
 	}
-	if err := writeStdout(map[string]any{"output": *outputPath, "coverage_complete": report.Coverage.Complete, "winner": report.Selection.Winner}); err != nil {
+	result := selectionSummary(report)
+	result["output"] = *outputPath
+	if err := writeStdout(result); err != nil {
 		return 1, err
 	}
 	return report.ExitCode(), nil
@@ -156,10 +164,26 @@ func runCommand(args []string) (int, error) {
 	if err != nil {
 		return 1, fmt.Errorf("run artifacts retained at %s: %w", runDir, err)
 	}
-	if err := writeStdout(map[string]any{"run_dir": runDir, "coverage_complete": report.Coverage.Complete, "winner": report.Selection.Winner}); err != nil {
+	result := selectionSummary(report)
+	result["run_dir"] = runDir
+	if err := writeStdout(result); err != nil {
 		return 1, err
 	}
 	return report.ExitCode(), nil
+}
+
+func selectionSummary(report phase2.Report) map[string]any {
+	return map[string]any{
+		"coverage_complete":      report.Coverage.Complete,
+		"winner":                 report.Selection.Winner,
+		"winner_semantics":       "legacy_pareto",
+		"pareto_status":          report.ParetoSelection.Status,
+		"pareto_winner":          report.ParetoSelection.Winner,
+		"operational_status":     report.OperationalSelection.Status,
+		"operational_winner":     report.OperationalSelection.Winner,
+		"operational_challenger": report.OperationalSelection.Challenger,
+		"operational_rejected":   report.OperationalSelection.Rejected,
+	}
 }
 
 func readFixtures(path string) ([]phase2.Fixture, error) {

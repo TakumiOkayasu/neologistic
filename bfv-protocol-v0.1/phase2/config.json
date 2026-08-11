@@ -5,6 +5,18 @@
   "sandbox": "read-only",
   "approval_policy": "never",
   "automatic_runtime_retries": 0,
+  "operational_pricing": {
+    "policy_version": "gpt-5.6-sol-2026-08-11",
+    "model": "gpt-5.6-sol",
+    "verified_on": "2026-08-11",
+    "source": "https://developers.openai.com/api/docs/models/gpt-5.6-sol",
+    "uncached_input_nano_usd_per_token": 5000,
+    "cached_input_nano_usd_per_token": 500,
+    "cache_write_input_nano_usd_per_token": 6250,
+    "output_nano_usd_per_token": 30000,
+    "standard_rate_max_input_tokens_per_call": 272000,
+    "reasoning_output_cost_treatment": "reasoning_output_tokens are diagnostic and are already included in output_tokens, so they are not added separately"
+  },
   "candidates": [
     "direct-v1",
     "nl-v1",
