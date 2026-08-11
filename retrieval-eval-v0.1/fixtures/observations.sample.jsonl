@@ -1,0 +1,2 @@
+{"case_id":"auth-boundary","system":"filesystem","available":true,"revision":"abc","stale":false,"candidates":[{"path":"internal/auth/service.go","start_line":40,"end_line":70,"score":9,"revision":"abc"}],"claimed_absent":false,"latency_ms":12,"candidate_bytes":420,"tool_calls":1,"downstream_correct":true}
+{"case_id":"not-found","system":"filesystem","available":true,"revision":"abc","stale":false,"candidates":[],"claimed_absent":true,"latency_ms":8,"candidate_bytes":0,"tool_calls":1,"downstream_correct":true}
