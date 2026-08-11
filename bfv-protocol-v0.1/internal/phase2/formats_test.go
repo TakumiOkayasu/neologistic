@@ -48,6 +48,29 @@ func TestJSONAndNLFormatsRoundTripExactKindKeys(t *testing.T) {
 	}
 }
 
+func TestJSONCandidateKeepsCanonicalWireShape(t *testing.T) {
+	records := []Record{
+		{Kind: "R1", Target: "R", Epistemic: "OU", Content: "result", Evidence: nil, Bounds: stringPointer("scope")},
+		{Kind: "Q1", Target: "Q", Content: "choose", Recommendation: "retain", Evidence: stringPointer("analysis:1"), Bounds: stringPointer("human-only")},
+		{Kind: "D1", Target: "D", Content: "staged", AuthorityReference: "approval:1", Bounds: nil},
+	}
+	raw, err := EncodeCandidate(CandidateJSON, records)
+	if err != nil {
+		t.Fatal(err)
+	}
+	const want = `{"records":[{"bounds":"scope","content":"result","epistemic":"OU","evidence":null,"kind":"R1","target":"R"},{"bounds":"human-only","content":"choose","evidence":"analysis:1","kind":"Q1","recommendation":"retain","target":"Q"},{"authority_reference":"approval:1","bounds":null,"content":"staged","kind":"D1","target":"D"}]}`
+	if raw != want {
+		t.Fatalf("EncodeCandidate(json-v1) = %s\nwant = %s", raw, want)
+	}
+	parsed, canonical, err := ParseCandidate(CandidateJSON, raw)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if canonical != want || len(parsed) != len(records) {
+		t.Fatalf("JSON candidate delegation changed the canonical form")
+	}
+}
+
 func TestConsumerRejectsExtraKeysAndCodeFence(t *testing.T) {
 	for _, raw := range []string{
 		`{"records":[],"task":{"kind":"record_review"},"extra":true}`,

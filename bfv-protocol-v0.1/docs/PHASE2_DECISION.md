@@ -77,6 +77,19 @@ Consumers that need the runtime default must read the operational output, not re
 
 The frozen Pareto object's `next_discriminating_test` is retained as historical diagnostic data so the artifact stays unchanged. It is not the active operational plan and does not authorize a model rerun.
 
+## Operational enactment
+
+The decision is available as a first-class reference implementation without changing existing `pipe-v1` callers:
+
+```sh
+go run ./cmd/bfvctl validate -format json-v1 -input message.json
+go run ./cmd/bfvctl canonicalize -format json-v1 -input message.json
+```
+
+New model integrations use [`prompts/json-v1-instruction.md`](../prompts/json-v1-instruction.md). The CLI's no-flag default remains `pipe-v1` solely as a compatibility contract; new integrations opt into the operational default with `-format json-v1`. Canonicalization parses and emits one selected format rather than converting between formats.
+
+This enactment does not alter the frozen Phase 1 or Phase 2 artifacts, captured prompts, responses, usage, scores, or checksums. It also does not add observations or turn the coverage pilot into a population reliability estimate.
+
 ## Evidence boundary and re-evaluation
 
 This run contains one corrected observation for each preregistered semantic class. It supports the operational decision for this model/configuration, workload, and pricing policy; it is not a population reliability estimate and does not establish universal JSON superiority.

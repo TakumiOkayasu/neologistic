@@ -37,9 +37,13 @@ func ParseCandidate(candidate, raw string) ([]Record, string, error) {
 		canonical, _ := EncodeCandidate(candidate, records)
 		return records, canonical, nil
 	case CandidateJSON:
-		records, err := parseJSONRecords(raw)
+		parsed, err := protocol.Parse(protocol.FormatJSONV1, raw)
 		if err != nil {
 			return nil, "", err
+		}
+		records := make([]Record, len(parsed))
+		for i := range parsed {
+			records[i] = fromProtocolRecord(parsed[i])
 		}
 		canonical, _ := EncodeCandidate(candidate, records)
 		return records, canonical, nil
@@ -68,12 +72,11 @@ func EncodeCandidate(candidate string, records []Record) (string, error) {
 		}
 		return strings.Join(lines, "\n"), nil
 	case CandidateJSON:
-		objects := make([]map[string]any, len(records))
+		converted := make([]protocol.Record, len(records))
 		for i := range records {
-			objects[i] = recordObject(records[i])
+			converted[i] = toProtocolRecord(records[i])
 		}
-		encoded, err := json.Marshal(map[string]any{"records": objects})
-		return string(encoded), err
+		return protocol.Encode(protocol.FormatJSONV1, converted)
 	default:
 		return "", fmt.Errorf("unsupported candidate %q", candidate)
 	}
@@ -124,37 +127,6 @@ func EncodeConsumer(records []Record, task map[string]any) (string, error) {
 		objects[i] = recordObject(records[i])
 	}
 	return marshalCanonical(map[string]any{"records": objects, "task": task})
-}
-
-func parseJSONRecords(raw string) ([]Record, error) {
-	decoder := json.NewDecoder(strings.NewReader(raw))
-	var object map[string]json.RawMessage
-	if err := decoder.Decode(&object); err != nil {
-		return nil, err
-	}
-	var extra any
-	if err := decoder.Decode(&extra); err != io.EOF {
-		return nil, fmt.Errorf("more than one JSON value")
-	}
-	if len(object) != 1 || object["records"] == nil {
-		return nil, fmt.Errorf("json-v1 requires exactly the records key")
-	}
-	var rawRecords []json.RawMessage
-	if err := json.Unmarshal(object["records"], &rawRecords); err != nil {
-		return nil, err
-	}
-	if len(rawRecords) == 0 {
-		return nil, fmt.Errorf("records must not be empty")
-	}
-	records := make([]Record, len(rawRecords))
-	for i := range rawRecords {
-		record, err := decodeRecord(rawRecords[i], true)
-		if err != nil {
-			return nil, fmt.Errorf("record %d: %w", i+1, err)
-		}
-		records[i] = record
-	}
-	return records, nil
 }
 
 func parseNL(raw string) ([]Record, error) {

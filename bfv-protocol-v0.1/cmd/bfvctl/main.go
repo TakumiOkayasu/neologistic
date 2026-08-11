@@ -40,8 +40,13 @@ func usage() {
 }
 
 func validate(args []string) error {
+	return validateTo(args, os.Stdout)
+}
+
+func validateTo(args []string, stdout io.Writer) error {
 	fs := flag.NewFlagSet("validate", flag.ContinueOnError)
 	input := fs.String("input", "-", "wire message file, or - for stdin")
+	format := fs.String("format", string(protocol.FormatPipeV1), "wire format: pipe-v1 or json-v1")
 	if err := fs.Parse(args); err != nil {
 		return err
 	}
@@ -54,17 +59,22 @@ func validate(args []string) error {
 	if err != nil {
 		return err
 	}
-	records, err := protocol.ParseMessage(string(raw))
+	records, err := protocol.Parse(protocol.Format(*format), string(raw))
 	if err != nil {
 		return err
 	}
-	fmt.Printf("valid records=%d\n", len(records))
-	return nil
+	_, err = fmt.Fprintf(stdout, "valid records=%d\n", len(records))
+	return err
 }
 
 func canonicalize(args []string) error {
+	return canonicalizeTo(args, os.Stdout)
+}
+
+func canonicalizeTo(args []string, stdout io.Writer) error {
 	fs := flag.NewFlagSet("canonicalize", flag.ContinueOnError)
 	input := fs.String("input", "-", "wire message file, or - for stdin")
+	format := fs.String("format", string(protocol.FormatPipeV1), "wire format: pipe-v1 or json-v1")
 	if err := fs.Parse(args); err != nil {
 		return err
 	}
@@ -77,16 +87,17 @@ func canonicalize(args []string) error {
 	if err != nil {
 		return err
 	}
-	records, err := protocol.ParseMessage(string(raw))
+	selectedFormat := protocol.Format(*format)
+	records, err := protocol.Parse(selectedFormat, string(raw))
 	if err != nil {
 		return err
 	}
-	canonical, err := protocol.EncodeMessage(records)
+	canonical, err := protocol.Encode(selectedFormat, records)
 	if err != nil {
 		return err
 	}
-	fmt.Println(canonical)
-	return nil
+	_, err = fmt.Fprintln(stdout, canonical)
+	return err
 }
 
 func evaluate(args []string) error {

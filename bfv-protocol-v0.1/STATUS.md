@@ -11,6 +11,7 @@
 - authenticated `pipe-v1` real-model coverage pilot
 - Phase 2 matched 20-cell candidate coverage pilot
 - Phase 2 operational pricing decision
+- Phase 3 operational `json-v1` codec and CLI format selection
 
 ## Phase 2 operational result
 
@@ -25,6 +26,14 @@
 ## Diagnostic compatibility
 
 The frozen artifact's Pareto-vector result remains `no_winner`, and the canonical artifact is byte-unchanged. For future reports, legacy `selection.json`, `score.json.selection`, and CLI `winner` remain aliases for the Pareto diagnostic. The operational decision is emitted separately. See `docs/PHASE2_DECISION.md` and `docs/PHASE2_RESULTS.md`.
+
+## Operational interface
+
+- New integrations use `json-v1` through `bfvctl validate -format json-v1`, `bfvctl canonicalize -format json-v1`, and `prompts/json-v1-instruction.md`.
+- Omitting `-format` continues to select `pipe-v1`, preserving the established CLI contract.
+- `canonicalize` emits the same format it parses; this surface does not perform cross-format conversion.
+- `validate` does not authenticate `D1` authority references; downstream enforcement must resolve them against an authenticated source or allowlist.
+- Phase 1 and Phase 2 artifacts and captured prompts remain frozen. No model rerun was required for operationalization, and the observed coverage is not a population reliability claim.
 
 ## Human-only decision boundary
 
