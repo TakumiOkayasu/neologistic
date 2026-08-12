@@ -1,2 +1,0 @@
-{"id":"auth-boundary","query":"Where is the authorization boundary enforced?","answerable":true,"gold_paths":["internal/auth/service.go"],"k":5}
-{"id":"not-found","query":"Is a GraphRAG backend implemented?","answerable":false,"gold_paths":[],"k":5}
