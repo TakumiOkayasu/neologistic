@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:neologistic:phase3:outcome:v1",
+  "title": "Phase3Outcome",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "task_id",
+    "selected_option",
+    "status",
+    "assertions",
+    "actions",
+    "human_request",
+    "completion",
+    "concepts",
+    "intent_receipt"
+  ],
+  "properties": {
+    "version": {
+      "const": "phase3-outcome-v1"
+    },
+    "task_id": {
+      "type": "string",
+      "pattern": "^p3-[0-9]{3}$"
+    },
+    "selected_option": {
+      "type": "string",
+      "pattern": "^d[1-9][0-9]*$"
+    },
+    "status": {
+      "enum": [
+        "resolved",
+        "needs_human",
+        "reopened",
+        "blocked"
+      ]
+    },
+    "assertions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "origin",
+          "state",
+          "evidence_ids"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "pattern": "^k[1-9][0-9]*$"
+          },
+          "origin": {
+            "enum": [
+              "observed",
+              "inferred",
+              "synthetic"
+            ]
+          },
+          "state": {
+            "enum": [
+              "open",
+              "verified",
+              "refuted"
+            ]
+          },
+          "evidence_ids": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^s[1-9][0-9]*$"
+            }
+          }
+        }
+      }
+    },
+    "actions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^a[1-9][0-9]*$"
+      }
+    },
+    "human_request": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "question_id",
+            "recommendation_option",
+            "blocking_reason"
+          ],
+          "properties": {
+            "question_id": {
+              "type": "string",
+              "pattern": "^h[1-9][0-9]*$"
+            },
+            "recommendation_option": {
+              "type": "string",
+              "pattern": "^d[1-9][0-9]*$"
+            },
+            "blocking_reason": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "completion": {
+      "enum": [
+        "ready_for_acceptance",
+        "not_ready"
+      ]
+    },
+    "concepts": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^c[1-9][0-9]*$"
+      }
+    },
+    "intent_receipt": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "version",
+            "status",
+            "understood_contract",
+            "added_assumptions",
+            "planned_side_effects",
+            "conflicts"
+          ],
+          "properties": {
+            "version": {
+              "const": "intent-v1"
+            },
+            "status": {
+              "enum": [
+                "accepted",
+                "conflict"
+              ]
+            },
+            "understood_contract": {
+              "type": "string",
+              "minLength": 1
+            },
+            "added_assumptions": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "planned_side_effects": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "conflicts": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

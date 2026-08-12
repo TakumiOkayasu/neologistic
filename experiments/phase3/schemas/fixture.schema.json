@@ -1,0 +1,387 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:neologistic:phase3:fixture:v2",
+  "title": "Phase3Fixture",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "id",
+    "class",
+    "title",
+    "user_request",
+    "sources",
+    "decision_options",
+    "assertion_options",
+    "action_options",
+    "concept_options",
+    "human_question_options",
+    "gold"
+  ],
+  "properties": {
+    "version": {
+      "const": "phase3-fixture-v2"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^p3-[0-9]{3}$"
+    },
+    "class": {
+      "enum": [
+        "atomic_evidence_transfer",
+        "epistemic_origin_preservation",
+        "human_authority_boundary",
+        "false_human_escalation",
+        "scope_expansion_control",
+        "reopen_after_refutation",
+        "abstraction_preservation",
+        "intent_provenance_gate"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "user_request": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "decision_options": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/decisionOption"
+      }
+    },
+    "assertion_options": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/assertionOption"
+      }
+    },
+    "action_options": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/actionOption"
+      }
+    },
+    "concept_options": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/conceptOption"
+      }
+    },
+    "human_question_options": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/humanQuestionOption"
+      }
+    },
+    "intent_envelope": {
+      "$ref": "intent-envelope.schema.json"
+    },
+    "gold": {
+      "$ref": "#/$defs/gold"
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "content"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^s[1-9][0-9]*$"
+        },
+        "kind": {
+          "type": "string",
+          "minLength": 1
+        },
+        "content": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "assertion": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key",
+        "origin",
+        "state",
+        "evidence_ids"
+      ],
+      "properties": {
+        "key": {
+          "type": "string",
+          "pattern": "^k[1-9][0-9]*$"
+        },
+        "origin": {
+          "enum": [
+            "observed",
+            "inferred",
+            "synthetic"
+          ]
+        },
+        "state": {
+          "enum": [
+            "open",
+            "verified",
+            "refuted"
+          ]
+        },
+        "evidence_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^s[1-9][0-9]*$"
+          }
+        }
+      }
+    },
+    "humanExpectation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "required",
+            "forbidden"
+          ]
+        },
+        "question_id": {
+          "type": "string",
+          "pattern": "^h[1-9][0-9]*$"
+        },
+        "recommendation_option": {
+          "type": "string",
+          "pattern": "^d[1-9][0-9]*$"
+        }
+      }
+    },
+    "intentExpectation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required"
+      ],
+      "properties": {
+        "required": {
+          "type": "boolean"
+        },
+        "status": {
+          "enum": [
+            "accepted",
+            "conflict"
+          ]
+        },
+        "planned_side_effects": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required_conflict_terms": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "gold": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "selected_option",
+        "status",
+        "assertions",
+        "required_actions",
+        "forbidden_actions",
+        "human_request",
+        "completion",
+        "required_concepts",
+        "forbidden_concepts",
+        "intent_receipt"
+      ],
+      "properties": {
+        "selected_option": {
+          "type": "string",
+          "pattern": "^d[1-9][0-9]*$"
+        },
+        "status": {
+          "enum": [
+            "resolved",
+            "needs_human",
+            "reopened",
+            "blocked"
+          ]
+        },
+        "assertions": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/assertion"
+          }
+        },
+        "required_actions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^a[1-9][0-9]*$"
+          }
+        },
+        "forbidden_actions": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^a[1-9][0-9]*$"
+          }
+        },
+        "human_request": {
+          "$ref": "#/$defs/humanExpectation"
+        },
+        "completion": {
+          "enum": [
+            "ready_for_acceptance",
+            "not_ready"
+          ]
+        },
+        "required_concepts": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^c[1-9][0-9]*$"
+          }
+        },
+        "forbidden_concepts": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^c[1-9][0-9]*$"
+          }
+        },
+        "intent_receipt": {
+          "$ref": "#/$defs/intentExpectation"
+        }
+      }
+    },
+    "decisionOption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "text"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^d[1-9][0-9]*$"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "assertionOption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "text"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^k[1-9][0-9]*$"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "actionOption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "text"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^a[1-9][0-9]*$"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "conceptOption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "text"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^c[1-9][0-9]*$"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "humanQuestionOption": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "text"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^h[1-9][0-9]*$"
+        },
+        "text": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

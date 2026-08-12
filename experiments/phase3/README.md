@@ -1,50 +1,116 @@
-# Phase 3: End-to-End LLM Communication Value
+# Phase 3: LLM-to-LLM Semantic Transfer Pilot
 
-This directory contains the operational specification for the next matched experiment. The repository-root `PROJECT_ORIGIN.md`, `DECISION_LINEAGE.md`, and `EXPERIMENT_PLAN.md` remain authoritative and are not duplicated here.
+Phase 3 returns to the original question: whether genshijin-like compression improves accepted LLM-to-LLM outcomes per total interaction cost. Carrier and BFV control policy are varied independently. Retrieval remains out of scope.
 
-## Status
+## Current boundary
 
-- Project reset: complete.
-- Specification integration: complete after this change is committed.
-- Deterministic fixtures, hidden gold, scorer, and cost ledger: not implemented yet.
-- Paid model and Codex runs: prohibited until the deterministic harness is frozen.
-- Retrieval: out of scope.
-
-## Experiment structure
+This is a **semantic transfer pilot**, not a repository-editing benchmark. The sender derives a handoff from frozen evidence. A source-blind receiver converts that handoff into one common outcome schema. The deterministic oracle evaluates the resulting decision, epistemic state, evidence association, scope, authority, and readiness.
 
 ```mermaid
 flowchart TD
-    O[Original question: does genshijin-like communication help modern LLMs?]
-    O --> M[Matched end-to-end experiment]
-
-    M --> A[Arm A: native, BFV off]
-    M --> B[Arm B: native, BFV on]
-    M --> C[Arm C: genshijin-like, BFV off]
-    M --> D[Arm D: genshijin-like, BFV on]
-    M --> E[Arm E: json-v1, BFV off]
-    M --> F[Arm F: json-v1, BFV on]
-
-    A --> G[Deterministic correctness gates]
-    B --> G
-    C --> G
-    D --> G
-    E --> G
-    F --> G
-
-    G --> H[Cost and human-intervention ledger]
-    H --> I[Operational decision]
-    I --> J[Retain or delete each custom mechanism]
+    O[Original question] --> F[8 frozen tasks and hidden gold]
+    F --> S[Sender sees evidence and opaque option catalogs]
+    S --> C{Carrier}
+    C --> N[Concise native]
+    C --> G[Genshijin-like normal]
+    C --> J[Neutral JSON carrier]
+    P{BFV off or on} --> S
+    P --> R[Source-blind receiver]
+    N --> R
+    G --> R
+    J --> R
+    R --> OJ[Common phase3-outcome-v1 JSON]
+    OJ --> V[Deterministic hard gates]
+    V --> L[Cost and intervention ledger]
+    L --> D[Bounded pilot decision]
 ```
+
+A later stateful execution experiment is justified only if this pilot shows that a custom mechanism survives semantic and cost gates.
+
+## Status
+
+- Project origin and decision lineage: fixed at repository root.
+- Matched arms: 6.
+- Failure-class fixtures: 8.
+- Receiver source isolation and opaque public IDs: implemented.
+- Intent Gate, strict renderer, scorer, cost ledger, early hard-failure elimination, and freeze manifest: implemented.
+- Paid model or Codex calls: prohibited until `make check` and `make preflight` pass on the exact revision used by the runner.
+
+## Commands
+
+```sh
+cd experiments/phase3
+make check
+```
+
+Render prompts without invoking a model:
+
+```sh
+go run ./cmd/phase3ctl render -case p3-001 -arm A -stage sender
+
+go run ./cmd/phase3ctl render \
+  -case p3-001 \
+  -arm A \
+  -stage receiver \
+  -handoff artifacts/example/handoff.txt
+```
+
+Create a frozen run manifest without invoking a model:
+
+```sh
+go run ./cmd/phase3ctl manifest \
+  -run-id pilot-001 \
+  -sender-provider <provider> \
+  -sender-model <model> \
+  -sender-effort <effort> \
+  -receiver-provider <provider> \
+  -receiver-model <model> \
+  -receiver-effort <effort> \
+  -transport <isolated-harness> \
+  > artifacts/pilot-001/run-manifest.json
+```
+
+Score one completed cell before spending on the same arm again:
+
+```sh
+go run ./cmd/phase3ctl score-cell \
+  -manifest artifacts/pilot-001/run-manifest.json \
+  -observation artifacts/pilot-001/cells/p3-002/A/observation.json \
+  -pricing artifacts/pilot-001/pricing.json
+```
+
+A `hard_failure: true` result eliminates that arm from later cells.
+
+Score a completed run:
+
+```sh
+go run ./cmd/phase3ctl score \
+  -manifest artifacts/pilot-001/run-manifest.json \
+  -observations artifacts/pilot-001/observations.jsonl \
+  -pricing artifacts/pilot-001/pricing.json \
+  > artifacts/pilot-001/score.json
+```
+
+Bind and verify the completed artifact directory:
+
+```sh
+go run ./cmd/phase3ctl artifact-freeze \
+  -directory artifacts/pilot-001
+
+go run ./cmd/phase3ctl artifact-verify \
+  -directory artifacts/pilot-001
+```
+
+All file arguments are repository-relative. Missing pricing or usage remains unavailable rather than becoming zero. Pricing uses `phase3-pricing-v2`, with exact entries for every sender and receiver provider/model pair.
 
 ## Documents
 
 - [Experiment specification](SPEC.md)
-- [High-cost delegation intent gate](INTENT_GATE.md)
-- [IntentEnvelope schema](schemas/intent-envelope.schema.json)
-- [IntentReceipt schema](schemas/intent-receipt.schema.json)
+- [Methodology](docs/METHODOLOGY.md)
+- [Genshijin carrier provenance](docs/GENSHIJIN_PROVENANCE.md)
+- [Runner and artifact contract](docs/RUNNER_CONTRACT.md)
+- [Scoring](docs/SCORING.md)
+- [Limitations and claim boundary](docs/LIMITATIONS.md)
+- [High-cost delegation Intent Gate](INTENT_GATE.md)
 - [Fixture design rules](fixtures/TASK_DESIGN_RULES.md)
-- [Three-pass review](REVIEW.md)
-
-## Next implementation boundary
-
-Implement only deterministic fixtures, hidden gold, scorer, and ledgers. Do not invoke Codex or another paid model while those artifacts are still mutable.
+- [Review record](REVIEW.md)

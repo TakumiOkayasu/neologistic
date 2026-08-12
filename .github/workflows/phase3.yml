@@ -1,0 +1,44 @@
+name: phase3
+
+on:
+  push:
+    paths:
+      - 'AGENTS.md'
+      - 'README.md'
+      - 'PROJECT_ORIGIN.md'
+      - 'DECISION_LINEAGE.md'
+      - 'EXPERIMENT_PLAN.md'
+      - 'experiments/phase3/**'
+      - '.github/workflows/phase3.yml'
+  pull_request:
+    paths:
+      - 'AGENTS.md'
+      - 'README.md'
+      - 'PROJECT_ORIGIN.md'
+      - 'DECISION_LINEAGE.md'
+      - 'EXPERIMENT_PLAN.md'
+      - 'experiments/phase3/**'
+      - '.github/workflows/phase3.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  deterministic-harness:
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: experiments/phase3
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.x'
+          cache-dependency-path: experiments/phase3/go.mod
+      - run: ./scripts/check.sh

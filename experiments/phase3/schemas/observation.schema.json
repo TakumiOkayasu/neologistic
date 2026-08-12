@@ -1,0 +1,264 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:neologistic:phase3:observation:v1",
+  "title": "Phase3Observation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "run_id",
+    "case_id",
+    "arm_id",
+    "sender",
+    "handoff",
+    "receiver",
+    "human_interventions",
+    "correction_turns",
+    "converter",
+    "defects"
+  ],
+  "properties": {
+    "version": {
+      "const": "phase3-observation-v1"
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "case_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "arm_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sender": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "response",
+        "exit_code",
+        "calls",
+        "retries",
+        "tool_calls",
+        "latency_ms",
+        "usage"
+      ],
+      "properties": {
+        "response": {
+          "type": "string"
+        },
+        "exit_code": {
+          "type": "integer"
+        },
+        "calls": {
+          "const": 1
+        },
+        "retries": {
+          "const": 0
+        },
+        "tool_calls": {
+          "const": 0
+        },
+        "latency_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "usage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "input_tokens",
+            "cached_input_tokens",
+            "cache_write_input_tokens",
+            "output_tokens",
+            "reasoning_output_tokens"
+          ],
+          "properties": {
+            "input_tokens": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "cached_input_tokens": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "cache_write_input_tokens": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "output_tokens": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "reasoning_output_tokens": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "handoff": {
+      "type": "string"
+    },
+    "receiver": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "response",
+        "exit_code",
+        "calls",
+        "retries",
+        "tool_calls",
+        "latency_ms",
+        "usage"
+      ],
+      "properties": {
+        "response": {
+          "type": "string"
+        },
+        "exit_code": {
+          "type": "integer"
+        },
+        "calls": {
+          "const": 1
+        },
+        "retries": {
+          "const": 0
+        },
+        "tool_calls": {
+          "const": 0
+        },
+        "latency_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "usage": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "input_tokens",
+            "cached_input_tokens",
+            "cache_write_input_tokens",
+            "output_tokens",
+            "reasoning_output_tokens"
+          ],
+          "properties": {
+            "input_tokens": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "cached_input_tokens": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "cache_write_input_tokens": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "output_tokens": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            },
+            "reasoning_output_tokens": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "human_interventions": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "correction_turns": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "converter": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "calls",
+        "latency_ms"
+      ],
+      "properties": {
+        "calls": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "latency_ms": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "defects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "category",
+          "stage",
+          "reason"
+        ],
+        "properties": {
+          "category": {
+            "enum": [
+              "fixture",
+              "carrier",
+              "policy",
+              "model",
+              "runtime",
+              "scorer",
+              "human_contract",
+              "unclassified"
+            ]
+          },
+          "stage": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  }
+}

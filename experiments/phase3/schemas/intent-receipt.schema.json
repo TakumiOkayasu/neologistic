@@ -31,10 +31,12 @@
       "items": {
         "type": "string",
         "minLength": 1
-      }
+      },
+      "maxItems": 0
     },
     "planned_side_effects": {
       "type": "array",
+      "uniqueItems": true,
       "items": {
         "type": "string",
         "minLength": 1
@@ -45,7 +47,8 @@
       "items": {
         "type": "string",
         "minLength": 1
-      }
+      },
+      "uniqueItems": true
     }
   }
 }

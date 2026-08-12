@@ -8,14 +8,14 @@
 flowchart TD
     O1[O1: evaluate genshijin-like communication] --> O2[O2: focus on LLM-to-LLM communication]
     O2 --> O3[O3: optimize accepted value per total cost]
-    O3 --> H1[H1: compare native, custom, and structured carriers]
+    O3 --> H1[H1: compare native, compressed, and structured carriers]
     H1 --> P1[P1: evaluate BFV independently from carrier]
-    P1 --> E1[E1: json-v1 is the bounded operational baseline]
+    P1 --> E1[E1: Phase 2 BFV json-v1 is a bounded baseline]
+    E1 --> M1[M1: Phase 3 uses neutral json-carrier-v1 to remove confounding]
     O3 --> R1[R1: ranked retrieval is an independent hypothesis]
     R1 --> X1[X1: gateway integration was an unsupported inference]
     X1 --> W[Withdrawn: not current contract authority]
 ```
-
 
 | ID | 状態 | Provenance | 内容 |
 | --- | --- | --- | --- |
@@ -25,7 +25,8 @@ flowchart TD
 | H1 | hypothesis | ASSISTANT_INFERENCE | 独自delimiter、PUA、JSON等がnative communicationを上回る可能性がある。 |
 | P1 | experimental | MIXED | BFVを、carrierとは独立したscope/verification/convergence policyとして評価する。 |
 | T1 | active | USER_AUTHORIZED | ChatGPTとCodexを接続し、同一threadを継続できるtransportを用意する。 |
-| E1 | bounded decision | EXTERNAL_EVIDENCE | 現行のmatched runでは`json-v1`をoperational baseline、`pipe-v1`をchallengerとする。 |
+| E1 | bounded decision | EXTERNAL_EVIDENCE | Phase 2の限定条件ではBFV `json-v1`をoperational baseline、`pipe-v1`をchallengerとする。 |
+| M1 | active method correction | ASSISTANT_INFERENCE + METHODOLOGY | BFV `json-v1`はpolicy意味論を含むため、Phase 3のcarrier比較ではneutralな`json-carrier-v1`を使用する。既存artifactは変更しない。 |
 | R1 | independent hypothesis | EXTERNAL_EVIDENCE | 大規模・未限定corpusではglobal ranked retrievalが候補発見を改善し得る。 |
 | X1 | withdrawn | ASSISTANT_INFERENCE | Retrieval gatewayを新規repositoryとして作りBridgeへ恒久統合する。人間承認とworkload-specific evidenceを欠いたため撤回。 |
 
@@ -38,6 +39,8 @@ flowchart TD
 3. 人間が新しい`USER_AUTHORIZED` decisionとして明示的にratifyする。
 
 `ASSISTANT_INFERENCE`だけを根拠に、repository作成、複数repository変更、dependency/runtime、MCP/Plugin/Hook、release、architecture変更を実行してはならない。
+
+Allowed side effectは個別の`source_intent_ids`を持ち、すべて`USER_AUTHORIZED`へtraceできなければならない。External evidenceやAssistant inferenceはauthorityを付与しない。
 
 ## Supersession rule
 

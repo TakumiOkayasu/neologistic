@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:neologistic:phase3:arms:v1",
+  "title": "Phase3Arms",
+  "type": "array",
+  "minItems": 6,
+  "maxItems": 6,
+  "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "required": [
+      "version",
+      "id",
+      "carrier",
+      "bfv",
+      "custom_mechanisms",
+      "carrier_prompt",
+      "policy_prompt"
+    ],
+    "properties": {
+      "version": {
+        "const": "phase3-arm-v1"
+      },
+      "id": {
+        "enum": [
+          "A",
+          "B",
+          "C",
+          "D",
+          "E",
+          "F"
+        ]
+      },
+      "carrier": {
+        "enum": [
+          "native",
+          "genshijin-normal",
+          "json-carrier-v1"
+        ]
+      },
+      "bfv": {
+        "type": "boolean"
+      },
+      "custom_mechanisms": {
+        "type": "array",
+        "uniqueItems": true,
+        "items": {
+          "enum": [
+            "genshijin-normal",
+            "json-carrier-v1",
+            "bfv"
+          ]
+        }
+      },
+      "carrier_prompt": {
+        "type": "string",
+        "minLength": 1
+      },
+      "policy_prompt": {
+        "type": [
+          "string",
+          "null"
+        ]
+      }
+    }
+  }
+}

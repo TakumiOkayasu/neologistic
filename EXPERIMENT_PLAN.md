@@ -1,8 +1,8 @@
-# Next experiment: end-to-end communication value
+# Next experiment: LLM-to-LLM semantic transfer value
 
 ## Goal
 
-元の問いへ直接答える。Carrierとcontrol policyを分離したmatched comparisonを行い、accepted outcome value / total interaction costを比較する。
+元の問いへ直接答える。Carrierとcontrol policyを分離したmatched comparisonを行い、source-blind receiverへのsemantic transfer品質とtotal interaction costを比較する。実repository操作は別の後続実験とする。
 
 ## Conditions
 
@@ -10,16 +10,18 @@
 | --- | --- | --- |
 | A | concise native communication | none |
 | B | concise native communication | BFV |
-| C | genshijin-like minimal transformation | none |
-| D | genshijin-like minimal transformation | BFV |
-| E | `json-v1` | none |
-| F | `json-v1` | BFV |
+| C | genshijin-like normal mode | none |
+| D | genshijin-like normal mode | BFV |
+| E | `json-carrier-v1` | none |
+| F | `json-carrier-v1` | BFV |
 
 `chatgpt-codex-bridge`は同一transport/harnessとして固定する。Retrieval substrateは変更しない。
 
+Phase 2のBFV `json-v1`はR1/Q1/D1意味論を含むため、CarrierとBFVを直交比較するPhase 3のJSON armには使用しない。Phase 3ではneutralな`json-carrier-v1`を使い、Phase 2結果は限定されたhistorical evidenceとして保持する。
+
 ## Fixture classes
 
-各failure classを最低一度覆い、任意の反復回数を先に設定しない。
+各failure classを一度ずつ覆い、任意の反復回数を先に設定しない。
 
 1. atomic observationとevidenceを正しく転送するtask;
 2. observedとinferredを混同しやすいtask;
@@ -36,35 +38,36 @@
 
 1. Acceptance Criteriaの充足;
 2. epistemic state、evidence、authorityの保持;
-3. scope expansion、premature completion、不要Q1、非収束の有無;
+3. scope expansion、premature completion、不要なhuman escalation、非収束の有無;
 4. 人間の訂正・介入回数;
 5. paid tokens;
-6. retry、latency、tool call;
-7. protocol/Skill/converterの保守費用。
+6. retry、latency、tool call、converter overhead;
+7. protocol、Skill、converterの保守費用。
 
 ## Decision rule
 
-- Nativeが同等以上なら独自carrierを削除する。
-- BFVなしが同等以上ならBFVを削除または縮小する。
-- 差が明確でなければnativeをdefaultにする。
+- Arm Aが全hard gateを通る場合、custom armは全matched taskでA以下のcostかつ1 task以上でstrict improvementを示さなければdefaultを置換できない。
+- Cost vectorが交差する場合、保守費用を0と仮定せずArm Aをdefaultにする。
+- Arm Aがhard gateを落とした場合だけ、eligibleなcustom armをcostとmechanism数で選ぶ。
 - 追加試行は、既存結果でdecisionが分かれる一つの不確実性を解消する場合だけ行う。
 
 ## Execution boundary
 
-Fixture、gold、scorer、failure attribution、cost ledgerをdeterministicに固定するまでmodel/Codex runを開始しない。
+Fixture、hidden gold、prompt、schema、scorer、failure attribution、cost ledgerをdeterministicに固定するまでmodel/Codex runを開始しない。
 
-高コストtaskでは、BridgeのIntentEnvelope/IntentReceipt gateを先に通し、Assistant inferenceがUser requirementへ昇格していないことを確認する。
+高コストtaskではIntentEnvelope/IntentReceipt gateを先に通し、Assistant inferenceまたはexternal evidenceがUser authorityへ昇格していないことを確認する。
 
 ## Operational specification
 
-The deterministic Phase 3 contract, Intent Gate, schemas, and fixture rules are maintained under [`experiments/phase3/`](experiments/phase3/README.md).
+Deterministic harnessは[`experiments/phase3/`](experiments/phase3/README.md)に実装する。
 
 ```mermaid
 flowchart LR
-    F[Freeze fixtures, hidden gold, scorer, and ledgers] --> V[Validate deterministically]
-    V --> M{Harness frozen?}
-    M -- No --> F
-    M -- Yes --> R[Run matched model experiment]
-    R --> S[Score correctness before cost]
-    S --> D[Adopt or delete each custom mechanism]
+    F[Freeze fixtures, prompts, schemas, hidden gold, and scorer] --> V[Run deterministic checks]
+    V --> M{phase3ctl preflight passes?}
+    M -- no --> F
+    M -- yes --> R[Run 48 matched model cells]
+    R --> S[Apply hard correctness gates]
+    S --> C[Compare end-to-end cost]
+    C --> D[Retain or delete each custom mechanism]
 ```

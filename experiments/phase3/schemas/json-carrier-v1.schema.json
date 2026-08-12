@@ -1,0 +1,159 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:neologistic:phase3:json-carrier:v1",
+  "title": "JSONCarrierV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "summary",
+    "facts",
+    "recommended_option",
+    "actions",
+    "concepts",
+    "human_boundary",
+    "constraints",
+    "intent_receipt"
+  ],
+  "properties": {
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "facts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/fact"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "recommended_option": {
+      "type": "string",
+      "pattern": "^d[1-9][0-9]*$"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "disposition"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^a[1-9][0-9]*$"
+          },
+          "disposition": {
+            "enum": [
+              "include",
+              "exclude"
+            ]
+          }
+        }
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "concepts": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^c[1-9][0-9]*$"
+      }
+    },
+    "human_boundary": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/humanRequest"
+        }
+      ]
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "intent_receipt": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "intent-receipt.schema.json"
+        }
+      ]
+    }
+  },
+  "$defs": {
+    "fact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "key",
+        "origin",
+        "state",
+        "evidence_ids"
+      ],
+      "properties": {
+        "key": {
+          "type": "string",
+          "pattern": "^k[1-9][0-9]*$"
+        },
+        "origin": {
+          "enum": [
+            "observed",
+            "inferred",
+            "synthetic"
+          ]
+        },
+        "state": {
+          "enum": [
+            "open",
+            "verified",
+            "refuted"
+          ]
+        },
+        "evidence_ids": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^s[1-9][0-9]*$"
+          }
+        }
+      }
+    },
+    "humanRequest": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "question_id",
+        "recommendation_option",
+        "blocking_reason"
+      ],
+      "properties": {
+        "question_id": {
+          "type": "string",
+          "pattern": "^h[1-9][0-9]*$"
+        },
+        "recommendation_option": {
+          "type": "string",
+          "pattern": "^d[1-9][0-9]*$"
+        },
+        "blocking_reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

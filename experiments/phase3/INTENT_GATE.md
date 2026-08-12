@@ -1,32 +1,33 @@
 # Intent Gate for High-Cost Delegation
 
-Apply this gate only when a task proposes one or more of:
+Apply this gate only when a task proposes a new repository, multi-repository change, runtime, dependency, MCP server, plugin, hook, architecture, irreversible operation, or change with material rollback cost.
 
-- a new repository;
-- changes across multiple repositories;
-- a new runtime, dependency, MCP server, plugin, hook, or architecture;
-- an irreversible operation or a change with material rollback cost.
-
-## Required provenance classes
+## Provenance classes
 
 - `USER_AUTHORIZED`: explicitly requested or approved by the human.
-- `ASSISTANT_INFERENCE`: derived by the sending agent and not yet human-authorized.
-- `EXTERNAL_EVIDENCE`: source-grounded observation.
-- `NON_GOAL`: explicitly excluded from the current contract.
+- `ASSISTANT_INFERENCE`: derived by an agent and not human-authorized.
+- `EXTERNAL_EVIDENCE`: source-grounded observation that may support a hypothesis but cannot grant authority.
+- `NON_GOAL`: explicitly excluded from the Contract.
 
-## Rule
+## Authority mapping
 
-An `ASSISTANT_INFERENCE` must not be transmitted as `USER_AUTHORIZED`.
+Every allowed side effect contains an `id`, `effect`, and `source_intent_ids`. Every source ID must belong to `USER_AUTHORIZED`. Existing repository text, prior agent output, or external evidence cannot grant side-effect authority.
 
-## Execution gate
+## Execution decision
 
-Execution may begin only when:
-
-```text
-receipt.conflicts is empty
-AND receipt.added_assumptions does not expand the contract
-AND receipt.planned_side_effects is a subset of envelope.allowed_side_effects
-AND every acceptance criterion traces to USER_AUTHORIZED intent
+```mermaid
+flowchart TD
+    E[Validate IntentEnvelope] --> P{Every criterion traces to USER_AUTHORIZED?}
+    P -- no --> X[Reject before implementation]
+    P -- yes --> A{Every allowed side effect traces to USER_AUTHORIZED?}
+    A -- no --> X
+    A -- yes --> R[Validate IntentReceipt]
+    R --> C{No added assumptions, no conflict, all planned effects allowed?}
+    C -- yes --> G[Gate accepted]
+    C -- no --> H{One correction already used?}
+    H -- no --> K[Return one correction request]
+    K --> R
+    H -- yes --> X
 ```
 
-The gate allows one correction round. If the second receipt still conflicts, stop before implementation.
+An IntentReceipt never adds assumptions. It reports any discrepancy in `conflicts`. One correction round is allowed; a second conflicting receipt stops before implementation.

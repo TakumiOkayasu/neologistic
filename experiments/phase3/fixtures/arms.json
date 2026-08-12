@@ -1,0 +1,68 @@
+[
+  {
+    "version": "phase3-arm-v1",
+    "id": "A",
+    "carrier": "native",
+    "bfv": false,
+    "custom_mechanisms": [],
+    "carrier_prompt": "prompts/carriers/native.md",
+    "policy_prompt": null
+  },
+  {
+    "version": "phase3-arm-v1",
+    "id": "B",
+    "carrier": "native",
+    "bfv": true,
+    "custom_mechanisms": [
+      "bfv"
+    ],
+    "carrier_prompt": "prompts/carriers/native.md",
+    "policy_prompt": "prompts/policies/bfv.md"
+  },
+  {
+    "version": "phase3-arm-v1",
+    "id": "C",
+    "carrier": "genshijin-normal",
+    "bfv": false,
+    "custom_mechanisms": [
+      "genshijin-normal"
+    ],
+    "carrier_prompt": "prompts/carriers/genshijin-normal.md",
+    "policy_prompt": null
+  },
+  {
+    "version": "phase3-arm-v1",
+    "id": "D",
+    "carrier": "genshijin-normal",
+    "bfv": true,
+    "custom_mechanisms": [
+      "genshijin-normal",
+      "bfv"
+    ],
+    "carrier_prompt": "prompts/carriers/genshijin-normal.md",
+    "policy_prompt": "prompts/policies/bfv.md"
+  },
+  {
+    "version": "phase3-arm-v1",
+    "id": "E",
+    "carrier": "json-carrier-v1",
+    "bfv": false,
+    "custom_mechanisms": [
+      "json-carrier-v1"
+    ],
+    "carrier_prompt": "prompts/carriers/json-carrier-v1.md",
+    "policy_prompt": null
+  },
+  {
+    "version": "phase3-arm-v1",
+    "id": "F",
+    "carrier": "json-carrier-v1",
+    "bfv": true,
+    "custom_mechanisms": [
+      "json-carrier-v1",
+      "bfv"
+    ],
+    "carrier_prompt": "prompts/carriers/json-carrier-v1.md",
+    "policy_prompt": "prompts/policies/bfv.md"
+  }
+]
