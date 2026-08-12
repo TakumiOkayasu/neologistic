@@ -10,3 +10,4 @@ Before changing this repository, read `PROJECT_ORIGIN.md` and `DECISION_LINEAGE.
 - Retrieval integration `X1` is withdrawn. Do not restore it without a new human ruling and workload-specific evidence.
 - Freeze deterministic fixtures and scorers before invoking paid model/Codex runs.
 - Use repository-relative paths or `~/path/to/...` in human-facing instructions; never embed a user's absolute home path.
+- Use Mermaid for flow, architecture, state, and sequence diagrams. Do not use ASCII art; use Markdown tables or mathematical notation when those are the better representation.

@@ -7,7 +7,7 @@
 ## Conditions
 
 | Condition | Carrier | Control policy |
-|---|---|---|
+| --- | --- | --- |
 | A | concise native communication | none |
 | B | concise native communication | BFV |
 | C | genshijin-like minimal transformation | none |
@@ -21,13 +21,14 @@
 
 各failure classを最低一度覆い、任意の反復回数を先に設定しない。
 
-1. adjacent refactorへscope拡大しやすいtask;
+1. atomic observationとevidenceを正しく転送するtask;
 2. observedとinferredを混同しやすいtask;
 3. 人間権限が本当に必要なtask;
 4. Agentだけで解決でき、不要な質問を出してはいけないtask;
-5. 初回検証失敗後にrepair/reopenが必要なtask;
-6. 抽象的な問いを特定技術へ早期具体化しやすいtask;
-7. 新規repositoryやruntimeを過剰提案しやすい高コストtask。
+5. adjacent refactorへscope拡大しやすいtask;
+6. 初回検証失敗後にrepair/reopenが必要なtask;
+7. 抽象的な問いを特定技術へ早期具体化しやすいtask;
+8. 新規repositoryやruntimeを過剰提案しやすく、Intent Gateを必要とする高コストtask。
 
 ## Gates
 
@@ -53,3 +54,17 @@
 Fixture、gold、scorer、failure attribution、cost ledgerをdeterministicに固定するまでmodel/Codex runを開始しない。
 
 高コストtaskでは、BridgeのIntentEnvelope/IntentReceipt gateを先に通し、Assistant inferenceがUser requirementへ昇格していないことを確認する。
+
+## Operational specification
+
+The deterministic Phase 3 contract, Intent Gate, schemas, and fixture rules are maintained under [`experiments/phase3/`](experiments/phase3/README.md).
+
+```mermaid
+flowchart LR
+    F[Freeze fixtures, hidden gold, scorer, and ledgers] --> V[Validate deterministically]
+    V --> M{Harness frozen?}
+    M -- No --> F
+    M -- Yes --> R[Run matched model experiment]
+    R --> S[Score correctness before cost]
+    S --> D[Adopt or delete each custom mechanism]
+```

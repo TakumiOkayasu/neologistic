@@ -2,8 +2,23 @@
 
 各ContractとAcceptance Criterionは、この系譜のどの項目から導かれたかを追跡できなければならない。
 
+## Visual lineage
+
+```mermaid
+flowchart TD
+    O1[O1: evaluate genshijin-like communication] --> O2[O2: focus on LLM-to-LLM communication]
+    O2 --> O3[O3: optimize accepted value per total cost]
+    O3 --> H1[H1: compare native, custom, and structured carriers]
+    H1 --> P1[P1: evaluate BFV independently from carrier]
+    P1 --> E1[E1: json-v1 is the bounded operational baseline]
+    O3 --> R1[R1: ranked retrieval is an independent hypothesis]
+    R1 --> X1[X1: gateway integration was an unsupported inference]
+    X1 --> W[Withdrawn: not current contract authority]
+```
+
+
 | ID | 状態 | Provenance | 内容 |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | O1 | active | USER_AUTHORIZED | `genshijin`型の簡略化・変換が現代LLMで効果を持つか評価する。 |
 | O2 | active | USER_AUTHORIZED | 人間向け表示ではなく、LLM同士の通信を主対象として考える。 |
 | O3 | active | USER_AUTHORIZED | token対performanceを総costで評価し、不要な人間介入を避ける。 |
