@@ -10,9 +10,9 @@
 
 LLM間workflowについて、次を最大化する。
 
-```text
-accepted outcome value / total interaction cost
-```
+$$
+\operatorname{objective} = \frac{\text{accepted outcome value}}{\text{total interaction cost}}
+$$
 
 `accepted outcome value`には正確性、意思決定価値、証拠、反証耐性、再利用性を含む。
 
@@ -32,7 +32,7 @@ accepted outcome value / total interaction cost
 次の軸を混同しない。
 
 | Axis | Question |
-|---|---|
+| --- | --- |
 | Carrier | どの表現で意味を伝えるか |
 | Control policy | scope、検証、収束をどう制御するか |
 | Transport | どの実行環境・threadへ届けるか |

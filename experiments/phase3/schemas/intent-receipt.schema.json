@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:neologistic:phase3:intent-receipt:v1",
+  "title": "IntentReceipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "version",
+    "status",
+    "understood_contract",
+    "added_assumptions",
+    "planned_side_effects",
+    "conflicts"
+  ],
+  "properties": {
+    "version": {
+      "const": "intent-v1"
+    },
+    "status": {
+      "enum": [
+        "accepted",
+        "conflict"
+      ]
+    },
+    "understood_contract": {
+      "type": "string",
+      "minLength": 1
+    },
+    "added_assumptions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "planned_side_effects": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "conflicts": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}
