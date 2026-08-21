@@ -9,6 +9,7 @@ flowchart TD
     O1[O1: evaluate genshijin-like communication] --> O2[O2: focus on LLM-to-LLM communication]
     O2 --> O3[O3: optimize accepted value per total cost]
     O3 --> H1[H1: compare native, compressed, and structured carriers]
+    O3 --> PC1[PC1: Ponytail primary; Companion audits evidenced gaps]
     H1 --> P1[P1: evaluate BFV independently from carrier]
     P1 --> E1[E1: Phase 2 BFV json-v1 is a bounded baseline]
     E1 --> M1[M1: Phase 3 uses neutral json-carrier-v1 to remove confounding]
@@ -22,6 +23,7 @@ flowchart TD
 | O1 | active | USER_AUTHORIZED | `genshijin`型の簡略化・変換が現代LLMで効果を持つか評価する。 |
 | O2 | active | USER_AUTHORIZED | 人間向け表示ではなく、LLM同士の通信を主対象として考える。 |
 | O3 | active | USER_AUTHORIZED | token対performanceを総costで評価し、不要な人間介入を避ける。 |
+| PC1 | active | USER_AUTHORIZED | [Issue #3](https://github.com/TakumiOkayasu/neologistic/issues/3)により、Ponytailをprimary workflow、user-facing interaction、実装最小化の主担当とし、`neologistic`はboundedなinterop / evaluation artifactとevidence-producing checkを担うCompanionとする。初期targetの判断は`no custom wire`。Ponytailの機能は再実装せず、補完は具体的な△ / ×が観測された領域に限る。既存のBFV package / artifactはhistorical evidenceとして、frozen Phase 3 harnessはexperimental assetとして保持し、変更・削除・成功結果への置換を行わない。 |
 | H1 | hypothesis | ASSISTANT_INFERENCE | 独自delimiter、PUA、JSON等がnative communicationを上回る可能性がある。 |
 | P1 | experimental | MIXED | BFVを、carrierとは独立したscope/verification/convergence policyとして評価する。 |
 | T1 | active | USER_AUTHORIZED | ChatGPTとCodexを接続し、同一threadを継続できるtransportを用意する。 |
